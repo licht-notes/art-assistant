@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport"
           content="width=device-width,initial-scale=1.0,viewport-fit=cover">
-    <title>美術鑑賞対話アシスタント v2.3 | Dissonance & Insight</title>
+    <title>美術鑑賞対話アシスタント v2.4 | Dissonance & Insight</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         :root {
@@ -147,24 +147,45 @@
         .detail-text { font-size: 1em; line-height: 1.8; }
         .detail-title-artist { font-size: 1.1em; font-weight: 600; }
 
-        /* X-Y キャンバス */
+        /* X-Y キャンバス（縮小） */
         .axis-canvas-wrapper {
             border:1px solid #e2e8f0;
             border-radius:12px;
-            padding:12px;
+            padding:20px;
             background:#f8fafc;
+            max-width:380px;
+            margin:0 auto;
+        }
+        .axis-labels-row {
+            display:flex;
+            justify-content:space-between;
+            font-size:0.8em;
+            margin-top:8px;
+            opacity:0.8;
+        }
+        .axis-labels-col {
+            display:flex;
+            flex-direction:column;
+            justify-content:space-between;
+            font-size:0.8em;
+            opacity:0.8;
+            height:220px;
+        }
+        .axis-container {
+            display:flex;
+            gap:8px;
+            align-items:center;
         }
         #axisCanvas {
-            width:100%;
-            max-width:100%;
-            height:auto;
             display:block;
             background:#ffffff;
             border-radius:8px;
             touch-action:none;
+            border:1px solid #cbd5e1;
         }
         .axis-note {
-            font-size:0.85em; opacity:0.75; margin-top:6px;
+            font-size:0.85em; opacity:0.75; margin-top:8px;
+            text-align:center;
         }
 
         /* スマホ調整 */
@@ -178,13 +199,16 @@
             button { width: 100%; }
             .artwork-card { padding: 10px 12px; }
             .card-thumb { width: 50px; height: 50px; }
+            .axis-canvas-wrapper { padding: 12px; max-width:100%; }
+            .axis-labels-col { height:200px; font-size:0.75em; }
+            .axis-labels-row { font-size:0.75em; }
         }
     </style>
 </head>
 <body>
 <div class="container">
     <header>
-        <div class="version-badge">v2.3 XY-Plot</div>
+        <div class="version-badge">v2.4 Grid</div>
         <h1>🎨 美術鑑賞対話アシスタント</h1>
         <p>Dissonance & Insight - Personal Edition</p>
     </header>
@@ -217,14 +241,13 @@
                 <div class="photo-upload-area" onclick="document.getElementById('photoInput').click()">
                     <div id="uploadPrompt">
                         <div style="font-size: 3em; margin-bottom: 10px;">📷</div>
-                        <p style="font-weight: 600;">クリックして写真を選択（カメラ起動可）</p>
+                        <p style="font-weight: 600;">クリックして写真を選択（カメラ・アルバム）</p>
                     </div>
                     <img id="photoPreview" class="photo-preview" style="display: none;">
                 </div>
                 <input type="file"
                        id="photoInput"
                        accept="image/*"
-                       capture="environment"
                        style="display: none;"
                        onchange="handlePhotoUpload(event)">
             </div>
@@ -240,7 +263,7 @@
 
             <div style="display:flex; gap:10px; margin-top:20px; flex-wrap:wrap;">
                 <button class="btn-secondary" onclick="showSection('sectionList')">← 一覧に戻る</button>
-                <button class="btn-primary" onclick="goToStep(2)" style="flex:1;">
+                <button class="btn-primary" onclick="goToStep(2)">
                     次へ：第一印象を記録 →
                 </button>
             </div>
@@ -275,13 +298,27 @@
                 </select>
             </div>
 
-            <!-- X-Yキャンバス -->
+            <!-- X-Yキャンバス（グリッド方式） -->
             <div class="form-group">
-                <label>X-Y図に第一印象をプロット *</label>
+                <label>X-Y図に第一印象をプロット（-5〜+5） *</label>
                 <div class="axis-canvas-wrapper">
-                    <canvas id="axisCanvas" width="320" height="320"></canvas>
+                    <div class="axis-container">
+                        <div class="axis-labels-col">
+                            <div id="yTopLabel" style="text-align:center;">+5</div>
+                            <div style="text-align:center;">0</div>
+                            <div id="yBottomLabel" style="text-align:center;">-5</div>
+                        </div>
+                        <div>
+                            <canvas id="axisCanvas" width="220" height="220"></canvas>
+                            <div class="axis-labels-row">
+                                <div id="xLeftLabel">-5</div>
+                                <div>0</div>
+                                <div id="xRightLabel">+5</div>
+                            </div>
+                        </div>
+                    </div>
                     <div class="axis-note">
-                        キャンバス内をタップ/クリックすると、その位置に第一印象のポイントを打ちます（1点のみ、更新可）。
+                        キャンバス内をタップ/クリックすると、最も近いグリッド点（-5〜+5）にスナップします。
                     </div>
                 </div>
             </div>
@@ -295,7 +332,7 @@
 
             <div style="display:flex; gap:10px; margin-top:20px; flex-wrap:wrap;">
                 <button class="btn-secondary" onclick="goToStep(1)">← 前に戻る</button>
-                <button class="btn-primary" onclick="completeSession()" style="flex:1;">
+                <button class="btn-primary" onclick="completeSession()">
                     記録を保存 ✓
                 </button>
             </div>
@@ -356,8 +393,8 @@
         photoDataURL: '', timestamp: null,
         axis1Key: 'time_space',
         axis2Key: 'space_phys',
-        plotX: 0.5,  // 0〜1 の相対座標
-        plotY: 0.5
+        plotX: 0,  // -5〜+5 の整数
+        plotY: 0
     };
 
     let currentStep = 1;
@@ -368,19 +405,19 @@
     let hasPoint = false;
 
     const axis1Labels = {
-        time_space: { left: '過去（制作当時）', center: '現在', right: '未来（100年後）' },
+        time_space: { left: '過去', center: '現在', right: '未来' },
         subject_object: { left: '主観', center: '中間', right: '客観' },
-        micro_macro: { left: 'ミクロ（部分）', center: '作品全体', right: 'マクロ（展示空間）' },
-        personal_collective: { left: '個人的体験', center: '中間', right: '集団的体験' },
+        micro_macro: { left: 'ミクロ', center: '作品全体', right: 'マクロ' },
+        personal_collective: { left: '個人的', center: '中間', right: '集団的' },
         still_motion: { left: '静止', center: '中間', right: '運動' },
         moment_duration: { left: '瞬間', center: '中間', right: '持続' }
     };
 
     const axis2Labels = {
-        space_phys: { bottom: '接近（30cm）', center: '標準（2m）', top: '遠景（50m）' },
+        space_phys: { bottom: '接近', center: '標準', top: '遠景' },
         verbal_nonverbal: { bottom: '言語化可能', center: '中間', top: '言語化不可能' },
-        intent_chance: { bottom: '意図（計画）', center: '中間', top: '偶然（アクシデント）' },
-        inside_outside: { bottom: '作品内部', center: '中間', top: '作品外部（コンテクスト）' },
+        intent_chance: { bottom: '意図', center: '中間', top: '偶然' },
+        inside_outside: { bottom: '作品内部', center: '中間', top: '作品外部' },
         passive_active: { bottom: '受動', center: '中間', top: '能動' },
         memory_expectation: { bottom: '記憶', center: '中間', top: '予期' }
     };
@@ -506,8 +543,8 @@
             photoDataURL: '', timestamp: null,
             axis1Key: 'time_space',
             axis2Key: 'space_phys',
-            plotX: 0.5,
-            plotY: 0.5
+            plotX: 0,
+            plotY: 0
         };
         localStorage.removeItem('artworkData_v2');
 
@@ -560,7 +597,7 @@
             }
             document.getElementById('axis1Select').value = artworkData.axis1Key || 'time_space';
             document.getElementById('axis2Select').value = artworkData.axis2Key || 'space_phys';
-            hasPoint = true;
+            hasPoint = (artworkData.plotX !== undefined && artworkData.plotY !== undefined);
             showToast('✅ 前回のデータを復元しました');
             showSection('section1');
         }
@@ -614,101 +651,115 @@
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    // X-Yキャンバス設定
+    // X-Yキャンバス設定（グリッド方式：-5〜+5）
     function setupAxisCanvasEvents() {
         function handlePoint(evt) {
+            evt.preventDefault();
             const rect = axisCanvas.getBoundingClientRect();
             const clientX = evt.touches ? evt.touches[0].clientX : evt.clientX;
             const clientY = evt.touches ? evt.touches[0].clientY : evt.clientY;
             const x = clientX - rect.left;
             const y = clientY - rect.top;
+
+            // キャンバスサイズ内の相対座標（0〜1）
             const relX = x / axisCanvas.width;
             const relY = y / axisCanvas.height;
-            artworkData.plotX = Math.min(Math.max(relX, 0), 1);
-            artworkData.plotY = Math.min(Math.max(relY, 0), 1);
+
+            // -5〜+5にマッピング（11点グリッド）
+            // relX=0 → -5, relX=0.5 → 0, relX=1 → +5
+            const gridX = Math.round(relX * 10 - 5);
+            const gridY = Math.round((1 - relY) * 10 - 5); // Y軸は上が正
+
+            artworkData.plotX = Math.max(-5, Math.min(5, gridX));
+            artworkData.plotY = Math.max(-5, Math.min(5, gridY));
             hasPoint = true;
             drawAxisCanvas();
         }
 
         axisCanvas.addEventListener('click', handlePoint);
-        axisCanvas.addEventListener('touchstart', function(e) {
-            e.preventDefault();
-            handlePoint(e);
-        }, { passive: false });
+        axisCanvas.addEventListener('touchstart', handlePoint, { passive: false });
     }
 
     function drawAxisCanvas() {
         const w = axisCanvas.width;
         const h = axisCanvas.height;
-        axisCtx.clearRect(0,0,w,h);
+        axisCtx.clearRect(0, 0, w, h);
 
         const axis1Key = document.getElementById('axis1Select').value;
         const axis2Key = document.getElementById('axis2Select').value;
         artworkData.axis1Key = axis1Key;
         artworkData.axis2Key = axis2Key;
 
+        // ラベル更新
+        const xLabels = axis1Labels[axis1Key];
+        const yLabels = axis2Labels[axis2Key];
+        document.getElementById('xLeftLabel').textContent = xLabels.left;
+        document.getElementById('xRightLabel').textContent = xLabels.right;
+        document.getElementById('yBottomLabel').textContent = yLabels.bottom;
+        document.getElementById('yTopLabel').textContent = yLabels.top;
+
         // 背景
         axisCtx.fillStyle = '#ffffff';
-        axisCtx.fillRect(0,0,w,h);
+        axisCtx.fillRect(0, 0, w, h);
 
-        // 軸
-        axisCtx.strokeStyle = '#cbd5e1';
+        // グリッド描画（11x11）
+        axisCtx.strokeStyle = '#e2e8f0';
         axisCtx.lineWidth = 1;
+        for (let i = 0; i <= 10; i++) {
+            const pos = (i / 10) * w;
+            // 縦線
+            axisCtx.beginPath();
+            axisCtx.moveTo(pos, 0);
+            axisCtx.lineTo(pos, h);
+            axisCtx.stroke();
+            // 横線
+            axisCtx.beginPath();
+            axisCtx.moveTo(0, pos);
+            axisCtx.lineTo(w, pos);
+            axisCtx.stroke();
+        }
+
+        // 中心線強調
+        axisCtx.strokeStyle = '#94a3b8';
+        axisCtx.lineWidth = 2;
         axisCtx.beginPath();
-        axisCtx.moveTo(w/2, 0);
-        axisCtx.lineTo(w/2, h);
-        axisCtx.moveTo(0, h/2);
-        axisCtx.lineTo(w, h/2);
+        axisCtx.moveTo(w / 2, 0);
+        axisCtx.lineTo(w / 2, h);
+        axisCtx.moveTo(0, h / 2);
+        axisCtx.lineTo(w, h / 2);
         axisCtx.stroke();
 
-        // 中心点
-        axisCtx.fillStyle = '#64748b';
-        axisCtx.beginPath();
-        axisCtx.arc(w/2, h/2, 3, 0, Math.PI*2);
-        axisCtx.fill();
+        // グリッド点描画
+        axisCtx.fillStyle = '#cbd5e1';
+        for (let i = 0; i <= 10; i++) {
+            for (let j = 0; j <= 10; j++) {
+                const px = (i / 10) * w;
+                const py = (j / 10) * h;
+                axisCtx.beginPath();
+                axisCtx.arc(px, py, 2, 0, Math.PI * 2);
+                axisCtx.fill();
+            }
+        }
 
-        // ラベル
-        axisCtx.fillStyle = '#475569';
-        axisCtx.font = '12px -apple-system, BlinkMacSystemFont, sans-serif';
-        axisCtx.textAlign = 'center';
-
-        const xLabels = axis1Labels[axis1Key] || axis1Labels.time_space;
-        const yLabels = axis2Labels[axis2Key] || axis2Labels.space_phys;
-
-        axisCtx.fillText(xLabels.left, w*0.1, h/2 - 6);
-        axisCtx.fillText(xLabels.center, w/2, h/2 - 10);
-        axisCtx.fillText(xLabels.right, w*0.9, h/2 - 6);
-
-        axisCtx.save();
-        axisCtx.translate(10, h*0.9);
-        axisCtx.rotate(-Math.PI/2);
-        axisCtx.textAlign = 'center';
-        axisCtx.fillText(yLabels.bottom, 0, 0);
-        axisCtx.restore();
-
-        axisCtx.save();
-        axisCtx.translate(w-10, h*0.1);
-        axisCtx.rotate(-Math.PI/2);
-        axisCtx.textAlign = 'center';
-        axisCtx.fillText(yLabels.top, 0, 0);
-        axisCtx.restore();
-
-        // 中央ラベル（Y軸）
-        axisCtx.save();
-        axisCtx.translate(10, h/2);
-        axisCtx.rotate(-Math.PI/2);
-        axisCtx.textAlign = 'center';
-        axisCtx.fillText(yLabels.center, 0, 0);
-        axisCtx.restore();
-
-        // ポイント
+        // ユーザープロット
         if (hasPoint) {
-            const px = artworkData.plotX * w;
-            const py = artworkData.plotY * h;
+            // plotX, plotY: -5〜+5 → キャンバス座標
+            const relX = (artworkData.plotX + 5) / 10;
+            const relY = 1 - (artworkData.plotY + 5) / 10; // Y軸反転
+            const px = relX * w;
+            const py = relY * h;
+
             axisCtx.fillStyle = '#e11d48';
             axisCtx.beginPath();
-            axisCtx.arc(px, py, 6, 0, Math.PI*2);
+            axisCtx.arc(px, py, 7, 0, Math.PI * 2);
             axisCtx.fill();
+
+            // 白枠
+            axisCtx.strokeStyle = '#ffffff';
+            axisCtx.lineWidth = 2;
+            axisCtx.beginPath();
+            axisCtx.arc(px, py, 7, 0, Math.PI * 2);
+            axisCtx.stroke();
         }
     }
 
@@ -781,8 +832,6 @@
         `;
         container.appendChild(dateBlock);
 
-        const axis1 = axis1Labels[rec.axis1Key] || axis1Labels.time_space;
-        const axis2 = axis2Labels[rec.axis2Key] || axis2Labels.space_phys;
         const axisBlock = document.createElement('div');
         axisBlock.className = 'detail-block';
         axisBlock.innerHTML = `
@@ -793,6 +842,17 @@
             </div>
         `;
         container.appendChild(axisBlock);
+
+        const plotBlock = document.createElement('div');
+        plotBlock.className = 'detail-block';
+        plotBlock.innerHTML = `
+            <div class="detail-label">プロット座標（-5〜+5）</div>
+            <div class="detail-text">
+                X軸: ${rec.plotX ?? 0} （${axisKeyToLabel(rec.axis1Key)}）<br>
+                Y軸: ${rec.plotY ?? 0} （${axisKeyToLabel(rec.axis2Key)}）
+            </div>
+        `;
+        container.appendChild(plotBlock);
 
         const impressionBlock = document.createElement('div');
         impressionBlock.className = 'detail-block';
@@ -841,6 +901,8 @@
         const axis1 = axisKeyToLabel(rec.axis1Key);
         const axis2 = axisKeyToLabel(rec.axis2Key);
         const impression = rec.firstImpression || '';
+        const plotX = rec.plotX ?? 0;
+        const plotY = rec.plotY ?? 0;
 
         return [
             `# ${title} – ${artist}`,
@@ -852,9 +914,9 @@
             '## 第一印象コメント',
             impression,
             '',
-            '## X-Yプロット（相対座標）',
-            `- X: ${ (rec.plotX ?? 0.5).toFixed(2) }`,
-            `- Y: ${ (rec.plotY ?? 0.5).toFixed(2) }`,
+            '## X-Yプロット座標（-5〜+5）',
+            `- X軸: ${plotX} （${axis1}）`,
+            `- Y軸: ${plotY} （${axis2}）`,
             ''
         ].join('\n');
     }
