@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport"
           content="width=device-width,initial-scale=1.0,viewport-fit=cover">
-    <title>美術鑑賞対話アシスタント v2.2 | Dissonance & Insight</title>
+    <title>美術鑑賞対話アシスタント v2.3 | Dissonance & Insight</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         :root {
@@ -51,11 +51,11 @@
         }
         .form-group { margin-bottom: 25px; }
         label { display: block; margin-bottom: 8px; font-weight: 600; color: var(--primary); font-size: 0.95em; }
-        input[type="text"], textarea {
+        input[type="text"], textarea, select {
             width: 100%; padding: 12px 15px; border: 2px solid var(--light);
             border-radius: 8px; font-size: 1em; transition: all 0.3s ease; font-family: inherit;
         }
-        input:focus, textarea:focus {
+        input:focus, textarea:focus, select:focus {
             outline: none; border-color: var(--accent);
             box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
         }
@@ -68,21 +68,6 @@
         .btn-primary:hover { background: #2980b9; transform: translateY(-2px); }
         .btn-secondary { background: var(--light); color: var(--dark); }
         .btn-secondary:hover { background: #d0d7de; }
-
-        /* タイマー */
-        .timer-box {
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-            color: white; padding: 20px; border-radius: 12px; margin: 20px 0; text-align: center;
-        }
-        .timer-display {
-            font-size: 3em; font-weight: bold; font-family: 'Courier New', monospace; margin: 15px 0;
-        }
-        .timer-btn {
-            padding: 10px 20px; border: 2px solid white; background: transparent;
-            color: white; border-radius: 6px; cursor: pointer; font-weight: 600;
-            transition: all 0.3s ease; margin: 0 5px;
-        }
-        .timer-btn:hover { background: white; color: #f5576c; }
 
         /* 写真アップロード */
         .photo-upload-area {
@@ -162,9 +147,24 @@
         .detail-text { font-size: 1em; line-height: 1.8; }
         .detail-title-artist { font-size: 1.1em; font-weight: 600; }
 
-        /* スライダーラベル */
-        .axis-hint {
-            font-size: 0.85em; opacity: 0.75; margin-top: 2px;
+        /* X-Y キャンバス */
+        .axis-canvas-wrapper {
+            border:1px solid #e2e8f0;
+            border-radius:12px;
+            padding:12px;
+            background:#f8fafc;
+        }
+        #axisCanvas {
+            width:100%;
+            max-width:100%;
+            height:auto;
+            display:block;
+            background:#ffffff;
+            border-radius:8px;
+            touch-action:none;
+        }
+        .axis-note {
+            font-size:0.85em; opacity:0.75; margin-top:6px;
         }
 
         /* スマホ調整 */
@@ -178,14 +178,13 @@
             button { width: 100%; }
             .artwork-card { padding: 10px 12px; }
             .card-thumb { width: 50px; height: 50px; }
-            .timer-display { font-size: 2.2em; }
         }
     </style>
 </head>
 <body>
 <div class="container">
     <header>
-        <div class="version-badge">v2.2 Time×Space</div>
+        <div class="version-badge">v2.3 XY-Plot</div>
         <h1>🎨 美術鑑賞対話アシスタント</h1>
         <p>Dissonance & Insight - Personal Edition</p>
     </header>
@@ -247,44 +246,51 @@
             </div>
         </div>
 
-        <!-- 第一印象 + 時間×空間軸 -->
+        <!-- 第一印象：X-Y図 -->
         <div class="section" id="section2">
-            <h2 style="margin-bottom: 25px;">👁️ あなたの第一印象</h2>
+            <h2 style="margin-bottom: 25px;">👁️ 第一印象の位置づけ</h2>
 
-            <div class="timer-box">
-                <div style="font-size: 1.2em; font-weight: 600;">⏰ 第一印象タイマー</div>
-                <div class="timer-display" id="timerDisplay">3:00</div>
-                <p style="font-size: 0.9em; opacity: 0.9;">理性が介入する前の「生の反応」を記録</p>
-                <div style="margin-top: 15px;">
-                    <button class="timer-btn" onclick="startTimer()">スタート</button>
-                    <button class="timer-btn" onclick="resetTimer()">リセット</button>
-                </div>
+            <!-- 軸選択 -->
+            <div class="form-group">
+                <label>第1軸（X軸）</label>
+                <select id="axis1Select" onchange="drawAxisCanvas()">
+                    <option value="time_space">時間的距離：過去 ↔ 現在 ↔ 未来</option>
+                    <option value="subject_object">主観 ↔ 客観</option>
+                    <option value="micro_macro">ミクロ ↔ マクロ</option>
+                    <option value="personal_collective">個人的体験 ↔ 集団的体験</option>
+                    <option value="still_motion">静止 ↔ 運動</option>
+                    <option value="moment_duration">瞬間 ↔ 持続</option>
+                </select>
             </div>
 
             <div class="form-group">
-                <label>一文での第一印象 *</label>
+                <label>第2軸（Y軸）</label>
+                <select id="axis2Select" onchange="drawAxisCanvas()">
+                    <option value="space_phys">物理的距離：接近 ↔ 標準 ↔ 遠景</option>
+                    <option value="verbal_nonverbal">言語化可能 ↔ 言語化不可能</option>
+                    <option value="intent_chance">意図 ↔ 偶然</option>
+                    <option value="inside_outside">作品内部 ↔ 作品外部</option>
+                    <option value="passive_active">受動 ↔ 能動</option>
+                    <option value="memory_expectation">記憶 ↔ 予期</option>
+                </select>
+            </div>
+
+            <!-- X-Yキャンバス -->
+            <div class="form-group">
+                <label>X-Y図に第一印象をプロット *</label>
+                <div class="axis-canvas-wrapper">
+                    <canvas id="axisCanvas" width="320" height="320"></canvas>
+                    <div class="axis-note">
+                        キャンバス内をタップ/クリックすると、その位置に第一印象のポイントを打ちます（1点のみ、更新可）。
+                    </div>
+                </div>
+            </div>
+
+            <!-- 一言コメント -->
+            <div class="form-group">
+                <label>第一印象コメント *</label>
                 <textarea id="firstImpression" rows="3"
-                          placeholder="例: 輪郭がなくてぼんやりしているけど、なぜか心が落ち着く絵"></textarea>
-            </div>
-
-            <div class="form-group">
-                <label>時間的距離（過去 ← 現在 → 未来）</label>
-                <input type="range" id="axisTime" min="0" max="100" value="50"
-                       oninput="updateAxisLabels()">
-                <div id="axisTimeLabel" class="axis-hint">現在</div>
-                <div class="axis-hint">
-                    ヒント例：制作当時の観客／今の自分／100年後の誰かとして見た時の違いをイメージする
-                </div>
-            </div>
-
-            <div class="form-group">
-                <label>物理的距離（接近 ← 標準 → 遠景）</label>
-                <input type="range" id="axisSpace" min="0" max="100" value="50"
-                       oninput="updateAxisLabels()">
-                <div id="axisSpaceLabel" class="axis-hint">標準（2m）</div>
-                <div class="axis-hint">
-                    ヒント例：30cmまで近づいた時／2m離れた時／展示室の端から見た時の見え方の違いを思い出す
-                </div>
+                          placeholder="例: 左下（過去×接近）に近い位置で、古い記憶に触れるような感覚がある"></textarea>
             </div>
 
             <div style="display:flex; gap:10px; margin-top:20px; flex-wrap:wrap;">
@@ -348,20 +354,45 @@
         id: null,
         title: '', artist: '', firstImpression: '',
         photoDataURL: '', timestamp: null,
-        axisTime: 50,
-        axisSpace: 50
+        axis1Key: 'time_space',
+        axis2Key: 'space_phys',
+        plotX: 0.5,  // 0〜1 の相対座標
+        plotY: 0.5
     };
 
     let currentStep = 1;
-    let timerInterval = null;
-    let timerSeconds = 180;
     let currentDetailId = null;
+
+    // キャンバス描画関連
+    let axisCanvas, axisCtx;
+    let hasPoint = false;
+
+    const axis1Labels = {
+        time_space: { left: '過去（制作当時）', center: '現在', right: '未来（100年後）' },
+        subject_object: { left: '主観', center: '中間', right: '客観' },
+        micro_macro: { left: 'ミクロ（部分）', center: '作品全体', right: 'マクロ（展示空間）' },
+        personal_collective: { left: '個人的体験', center: '中間', right: '集団的体験' },
+        still_motion: { left: '静止', center: '中間', right: '運動' },
+        moment_duration: { left: '瞬間', center: '中間', right: '持続' }
+    };
+
+    const axis2Labels = {
+        space_phys: { bottom: '接近（30cm）', center: '標準（2m）', top: '遠景（50m）' },
+        verbal_nonverbal: { bottom: '言語化可能', center: '中間', top: '言語化不可能' },
+        intent_chance: { bottom: '意図（計画）', center: '中間', top: '偶然（アクシデント）' },
+        inside_outside: { bottom: '作品内部', center: '中間', top: '作品外部（コンテクスト）' },
+        passive_active: { bottom: '受動', center: '中間', top: '能動' },
+        memory_expectation: { bottom: '記憶', center: '中間', top: '予期' }
+    };
 
     // ページ読み込み時
     window.addEventListener('DOMContentLoaded', function() {
         checkForSavedData();
         renderArtworkList();
-        updateAxisLabels();
+        axisCanvas = document.getElementById('axisCanvas');
+        axisCtx = axisCanvas.getContext('2d');
+        setupAxisCanvasEvents();
+        drawAxisCanvas();
     });
 
     // localStorage ヘルパ
@@ -473,8 +504,10 @@
             id: null,
             title: '', artist: '', firstImpression: '',
             photoDataURL: '', timestamp: null,
-            axisTime: 50,
-            axisSpace: 50
+            axis1Key: 'time_space',
+            axis2Key: 'space_phys',
+            plotX: 0.5,
+            plotY: 0.5
         };
         localStorage.removeItem('artworkData_v2');
 
@@ -484,10 +517,10 @@
         document.getElementById('photoPreview').style.display = 'none';
         document.getElementById('uploadPrompt').style.display = 'block';
         document.getElementById('photoPreview').src = '';
-        document.getElementById('axisTime').value = 50;
-        document.getElementById('axisSpace').value = 50;
-        updateAxisLabels();
-        resetTimer();
+        document.getElementById('axis1Select').value = 'time_space';
+        document.getElementById('axis2Select').value = 'space_phys';
+        hasPoint = false;
+        drawAxisCanvas();
 
         showSection('section1');
     }
@@ -525,13 +558,14 @@
                 document.getElementById('photoPreview').style.display = 'block';
                 document.getElementById('uploadPrompt').style.display = 'none';
             }
-            document.getElementById('axisTime').value = artworkData.axisTime ?? 50;
-            document.getElementById('axisSpace').value = artworkData.axisSpace ?? 50;
-            updateAxisLabels();
+            document.getElementById('axis1Select').value = artworkData.axis1Key || 'time_space';
+            document.getElementById('axis2Select').value = artworkData.axis2Key || 'space_phys';
+            hasPoint = true;
             showToast('✅ 前回のデータを復元しました');
             showSection('section1');
         }
         dismissRestore();
+        drawAxisCanvas();
     }
 
     function dismissRestore() {
@@ -560,57 +594,6 @@
         }
     }
 
-    // タイマー
-    function startTimer() {
-        if (timerInterval) return;
-        timerInterval = setInterval(() => {
-            timerSeconds--;
-            updateTimerDisplay();
-            if (timerSeconds <= 0) {
-                clearInterval(timerInterval);
-                timerInterval = null;
-                showToast('⏰ 3分経過しました！', 'warning');
-            }
-        }, 1000);
-    }
-
-    function resetTimer() {
-        clearInterval(timerInterval);
-        timerInterval = null;
-        timerSeconds = 180;
-        updateTimerDisplay();
-    }
-
-    function updateTimerDisplay() {
-        const min = Math.floor(timerSeconds / 60);
-        const sec = timerSeconds % 60;
-        document.getElementById('timerDisplay').textContent =
-            `${min}:${sec.toString().padStart(2, '0')}`;
-    }
-
-    // 時間×空間軸ラベル
-    function labelTimeDistance(v) {
-        if (v <= 10) return '過去（制作当時）寄り';
-        if (v >= 90) return '未来（100年後）寄り';
-        if (v < 40)  return 'やや過去寄り';
-        if (v > 60)  return 'やや未来寄り';
-        return '現在';
-    }
-    function labelPhysicalDistance(v) {
-        if (v <= 10) return '接近（30cm）に近い';
-        if (v >= 90) return '遠景（50m）に近い';
-        if (v < 40)  return '標準より近い';
-        if (v > 60)  return '標準より遠い';
-        return '標準（2m）';
-    }
-
-    function updateAxisLabels() {
-        const t = parseInt(document.getElementById('axisTime').value, 10);
-        const s = parseInt(document.getElementById('axisSpace').value, 10);
-        document.getElementById('axisTimeLabel').textContent  = labelTimeDistance(t);
-        document.getElementById('axisSpaceLabel').textContent = labelPhysicalDistance(s);
-    }
-
     // ステップ移動
     function goToStep(step) {
         if (step === 2) {
@@ -631,17 +614,117 @@
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    // セッション完了 → 多作品配列へ保存
+    // X-Yキャンバス設定
+    function setupAxisCanvasEvents() {
+        function handlePoint(evt) {
+            const rect = axisCanvas.getBoundingClientRect();
+            const clientX = evt.touches ? evt.touches[0].clientX : evt.clientX;
+            const clientY = evt.touches ? evt.touches[0].clientY : evt.clientY;
+            const x = clientX - rect.left;
+            const y = clientY - rect.top;
+            const relX = x / axisCanvas.width;
+            const relY = y / axisCanvas.height;
+            artworkData.plotX = Math.min(Math.max(relX, 0), 1);
+            artworkData.plotY = Math.min(Math.max(relY, 0), 1);
+            hasPoint = true;
+            drawAxisCanvas();
+        }
+
+        axisCanvas.addEventListener('click', handlePoint);
+        axisCanvas.addEventListener('touchstart', function(e) {
+            e.preventDefault();
+            handlePoint(e);
+        }, { passive: false });
+    }
+
+    function drawAxisCanvas() {
+        const w = axisCanvas.width;
+        const h = axisCanvas.height;
+        axisCtx.clearRect(0,0,w,h);
+
+        const axis1Key = document.getElementById('axis1Select').value;
+        const axis2Key = document.getElementById('axis2Select').value;
+        artworkData.axis1Key = axis1Key;
+        artworkData.axis2Key = axis2Key;
+
+        // 背景
+        axisCtx.fillStyle = '#ffffff';
+        axisCtx.fillRect(0,0,w,h);
+
+        // 軸
+        axisCtx.strokeStyle = '#cbd5e1';
+        axisCtx.lineWidth = 1;
+        axisCtx.beginPath();
+        axisCtx.moveTo(w/2, 0);
+        axisCtx.lineTo(w/2, h);
+        axisCtx.moveTo(0, h/2);
+        axisCtx.lineTo(w, h/2);
+        axisCtx.stroke();
+
+        // 中心点
+        axisCtx.fillStyle = '#64748b';
+        axisCtx.beginPath();
+        axisCtx.arc(w/2, h/2, 3, 0, Math.PI*2);
+        axisCtx.fill();
+
+        // ラベル
+        axisCtx.fillStyle = '#475569';
+        axisCtx.font = '12px -apple-system, BlinkMacSystemFont, sans-serif';
+        axisCtx.textAlign = 'center';
+
+        const xLabels = axis1Labels[axis1Key] || axis1Labels.time_space;
+        const yLabels = axis2Labels[axis2Key] || axis2Labels.space_phys;
+
+        axisCtx.fillText(xLabels.left, w*0.1, h/2 - 6);
+        axisCtx.fillText(xLabels.center, w/2, h/2 - 10);
+        axisCtx.fillText(xLabels.right, w*0.9, h/2 - 6);
+
+        axisCtx.save();
+        axisCtx.translate(10, h*0.9);
+        axisCtx.rotate(-Math.PI/2);
+        axisCtx.textAlign = 'center';
+        axisCtx.fillText(yLabels.bottom, 0, 0);
+        axisCtx.restore();
+
+        axisCtx.save();
+        axisCtx.translate(w-10, h*0.1);
+        axisCtx.rotate(-Math.PI/2);
+        axisCtx.textAlign = 'center';
+        axisCtx.fillText(yLabels.top, 0, 0);
+        axisCtx.restore();
+
+        // 中央ラベル（Y軸）
+        axisCtx.save();
+        axisCtx.translate(10, h/2);
+        axisCtx.rotate(-Math.PI/2);
+        axisCtx.textAlign = 'center';
+        axisCtx.fillText(yLabels.center, 0, 0);
+        axisCtx.restore();
+
+        // ポイント
+        if (hasPoint) {
+            const px = artworkData.plotX * w;
+            const py = artworkData.plotY * h;
+            axisCtx.fillStyle = '#e11d48';
+            axisCtx.beginPath();
+            axisCtx.arc(px, py, 6, 0, Math.PI*2);
+            axisCtx.fill();
+        }
+    }
+
+    // セッション完了 → 保存
     function completeSession() {
         const impression = document.getElementById('firstImpression').value.trim();
         if (!impression) {
-            showToast('⚠️ 第一印象を入力してください', 'warning');
+            showToast('⚠️ 第一印象コメントを入力してください', 'warning');
+            return;
+        }
+        if (!hasPoint) {
+            showToast('⚠️ X-Y図にポイントを打ってください', 'warning');
             return;
         }
         artworkData.firstImpression = impression;
         artworkData.timestamp = new Date().getTime();
-        artworkData.axisTime = parseInt(document.getElementById('axisTime').value, 10);
-        artworkData.axisSpace = parseInt(document.getElementById('axisSpace').value, 10);
 
         if (!artworkData.id) {
             artworkData.id = crypto.randomUUID ? crypto.randomUUID() : String(artworkData.timestamp);
@@ -698,31 +781,49 @@
         `;
         container.appendChild(dateBlock);
 
-        const impressionBlock = document.createElement('div');
-        impressionBlock.className = 'detail-block';
-        impressionBlock.innerHTML = `
-            <div class="detail-label">第一印象</div>
-            <div class="detail-text">${(rec.firstImpression || '').replace(/\n/g,'<br>') || '（未入力）'}</div>
-        `;
-        container.appendChild(impressionBlock);
-
+        const axis1 = axis1Labels[rec.axis1Key] || axis1Labels.time_space;
+        const axis2 = axis2Labels[rec.axis2Key] || axis2Labels.space_phys;
         const axisBlock = document.createElement('div');
         axisBlock.className = 'detail-block';
-        const tLabel = labelTimeDistance(rec.axisTime ?? 50);
-        const sLabel = labelPhysicalDistance(rec.axisSpace ?? 50);
         axisBlock.innerHTML = `
-            <div class="detail-label">時間 × 空間の感覚</div>
+            <div class="detail-label">選択した軸</div>
             <div class="detail-text">
-                時間的距離：${tLabel}<br>
-                物理的距離：${sLabel}
+                第1軸（X軸）：${axisKeyToLabel(rec.axis1Key)}<br>
+                第2軸（Y軸）：${axisKeyToLabel(rec.axis2Key)}
             </div>
         `;
         container.appendChild(axisBlock);
 
+        const impressionBlock = document.createElement('div');
+        impressionBlock.className = 'detail-block';
+        impressionBlock.innerHTML = `
+            <div class="detail-label">第一印象コメント</div>
+            <div class="detail-text">${(rec.firstImpression || '').replace(/\n/g,'<br>') || '（未入力）'}</div>
+        `;
+        container.appendChild(impressionBlock);
+
         showSection('sectionDetail');
     }
 
-    // Markdown書き出し用
+    function axisKeyToLabel(key) {
+        switch(key) {
+            case 'time_space': return '時間的距離';
+            case 'subject_object': return '主観 ↔ 客観';
+            case 'micro_macro': return 'ミクロ ↔ マクロ';
+            case 'personal_collective': return '個人的体験 ↔ 集団的体験';
+            case 'still_motion': return '静止 ↔ 運動';
+            case 'moment_duration': return '瞬間 ↔ 持続';
+            case 'space_phys': return '物理的距離';
+            case 'verbal_nonverbal': return '言語化可能 ↔ 言語化不可能';
+            case 'intent_chance': return '意図 ↔ 偶然';
+            case 'inside_outside': return '作品内部 ↔ 作品外部';
+            case 'passive_active': return '受動 ↔ 能動';
+            case 'memory_expectation': return '記憶 ↔ 予期';
+            default: return key;
+        }
+    }
+
+    // Markdown書き出し
     function formatDateForMD(timestamp) {
         const d = new Date(timestamp || Date.now());
         const y = d.getFullYear();
@@ -737,23 +838,23 @@
         const title = rec.title || '（無題）';
         const artist = rec.artist || '作者不明';
         const dt = formatDateForMD(rec.timestamp);
-        const tLabel = labelTimeDistance(rec.axisTime ?? 50);
-        const sLabel = labelPhysicalDistance(rec.axisSpace ?? 50);
+        const axis1 = axisKeyToLabel(rec.axis1Key);
+        const axis2 = axisKeyToLabel(rec.axis2Key);
         const impression = rec.firstImpression || '';
 
         return [
             `# ${title} – ${artist}`,
             '',
             `- 鑑賞日時: ${dt}`,
-            `- 時間的距離: ${tLabel}`,
-            `- 物理的距離: ${sLabel}`,
+            `- 第1軸（X軸）: ${axis1}`,
+            `- 第2軸（Y軸）: ${axis2}`,
             '',
-            '## 第一印象',
+            '## 第一印象コメント',
             impression,
             '',
-            '## 時間 × 空間の感覚',
-            `- 時間的距離: ${tLabel}`,
-            `- 物理的距離: ${sLabel}`,
+            '## X-Yプロット（相対座標）',
+            `- X: ${ (rec.plotX ?? 0.5).toFixed(2) }`,
+            `- Y: ${ (rec.plotY ?? 0.5).toFixed(2) }`,
             ''
         ].join('\n');
     }
