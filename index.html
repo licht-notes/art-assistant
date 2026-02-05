@@ -1,1148 +1,1132 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
-<html>
+<!DOCTYPE html>
+<html lang="ja">
+
 <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <meta http-equiv="Content-Style-Type" content="text/css">
-  <title></title>
-  <meta name="Generator" content="Cocoa HTML Writer">
-  <meta name="CocoaVersion" content="2575.7">
-  <style type="text/css">
-    p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica}
-    p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; min-height: 14.0px}
+  <title>美術鑑賞対話アシスタント v2.2 | Dissonance & Insight</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --primary: #2C3E50;
+      --secondary: #E74C3C;
+      --accent: #3498DB;
+      --success: #27AE60;
+      --warning: #F39C12;
+      --light: #ECF0F1;
+      --dark: #34495E;
+      --white: #FFFFFF;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Hiragino Kaku Gothic ProN', 'Yu Gothic', 'Meiryo', sans-serif;
+      line-height: 1.8;
+      color: var(--primary);
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 20px;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 900px;
+      margin: 0 auto;
+      background: var(--white);
+      border-radius: 20px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      overflow: hidden;
+    }
+
+    header {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--dark) 100%);
+      color: var(--white);
+      padding: 40px 30px;
+      text-align: center;
+      position: relative;
+    }
+
+    header h1 {
+      font-size: 2em;
+      margin-bottom: 10px;
+      font-weight: 700;
+    }
+
+    header p {
+      opacity: 0.9;
+      font-size: 0.95em;
+    }
+
+    .version-badge {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      background: rgba(255, 255, 255, 0.2);
+      padding: 5px 15px;
+      border-radius: 20px;
+      font-size: 0.8em;
+    }
+
+    .top-nav {
+      background: #f8fafc;
+      border-bottom: 1px solid #e2e8f0;
+      padding: 8px 16px;
+      text-align: right;
+    }
+
+    .top-nav button {
+      padding: 6px 12px;
+      font-size: 0.85em;
+    }
+
+    .main-content {
+      padding: 40px 30px;
+    }
+
+    .section {
+      display: none;
+    }
+
+    .section.active {
+      display: block;
+      animation: fadeIn 0.5s ease;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .form-group {
+      margin-bottom: 25px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
+      color: var(--primary);
+      font-size: 0.95em;
+    }
+
+    input[type="text"],
+    textarea {
+      width: 100%;
+      padding: 12px 15px;
+      border: 2px solid var(--light);
+      border-radius: 8px;
+      font-size: 1em;
+      transition: all 0.3s ease;
+      font-family: inherit;
+    }
+
+    input:focus,
+    textarea:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 100px;
+    }
+
+    button {
+      padding: 15px 30px;
+      border: none;
+      border-radius: 8px;
+      font-size: 1em;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-family: inherit;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: var(--white);
+    }
+
+    .btn-primary:hover {
+      background: #2980b9;
+      transform: translateY(-2px);
+    }
+
+    .btn-primary:active {
+      transform: translateY(0);
+    }
+
+    .btn-secondary {
+      background: var(--light);
+      color: var(--dark);
+    }
+
+    .btn-secondary:hover {
+      background: #d0d7de;
+    }
+
+    /* タイマー */
+    .timer-box {
+      background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+      color: white;
+      padding: 20px;
+      border-radius: 12px;
+      margin: 20px 0;
+      text-align: center;
+    }
+
+    .timer-display {
+      font-size: 3em;
+      font-weight: bold;
+      font-family: 'Courier New', monospace;
+      margin: 15px 0;
+    }
+
+    .timer-btn {
+      padding: 10px 20px;
+      border: 2px solid white;
+      background: transparent;
+      color: white;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      margin: 0 5px;
+    }
+
+    .timer-btn:hover {
+      background: white;
+      color: #f5576c;
+    }
+
+    /* 写真アップロード */
+    .photo-upload-area {
+      border: 3px dashed var(--light);
+      border-radius: 12px;
+      padding: 40px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin: 20px 0;
+    }
+
+    .photo-upload-area:hover {
+      border-color: var(--accent);
+      background: rgba(52, 152, 219, 0.05);
+    }
+
+    .photo-preview {
+      width: 100%;
+      max-width: 100%;
+      height: 300px;
+      border-radius: 8px;
+      margin-top: 15px;
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+      object-fit: contain;
+    }
+
+    /* 復元通知 */
+    .restore-notification {
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: white;
+      padding: 20px 30px;
+      border-radius: 12px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+      z-index: 2000;
+      display: none;
+      max-width: 90%;
+    }
+
+    .restore-notification.show {
+      display: block;
+      animation: slideDown 0.3s ease;
+    }
+
+    @keyframes slideDown {
+      from {
+        opacity: 0;
+        transform: translateX(-50%) translateY(-20px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+      }
+    }
+
+    /* Toast */
+    .toast {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      background: var(--success);
+      color: var(--white);
+      padding: 15px 25px;
+      border-radius: 8px;
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+      opacity: 0;
+      transform: translateY(50px);
+      transition: all 0.3s ease;
+      z-index: 1000;
+      max-width: 300px;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* 一覧用カード */
+    .list-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      gap: 10px;
+    }
+
+    .artwork-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-top: 10px;
+    }
+
+    .artwork-card {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      padding: 12px 15px;
+      border-radius: 10px;
+      border: 1px solid var(--light);
+      cursor: pointer;
+      transition: background 0.2s ease, transform 0.1s ease, box-shadow 0.2s ease;
+    }
+
+    .artwork-card:hover {
+      background: #f8fafc;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    }
+
+    .artwork-card:active {
+      transform: translateY(0);
+    }
+
+    .card-thumb {
+      width: 60px;
+      height: 60px;
+      border-radius: 8px;
+      object-fit: cover;
+      background: #ddd;
+      flex-shrink: 0;
+    }
+
+    .card-meta {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      flex: 1;
+    }
+
+    .card-title {
+      font-weight: 600;
+      font-size: 0.98em;
+    }
+
+    .card-artist {
+      font-size: 0.9em;
+      opacity: 0.8;
+    }
+
+    .card-date {
+      font-size: 0.8em;
+      opacity: 0.7;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 30px 10px;
+      opacity: 0.8;
+      font-size: 0.95em;
+    }
+
+    /* 詳細表示 */
+    .detail-photo {
+      max-width: 100%;
+      max-height: 400px;
+      border-radius: 12px;
+      display: block;
+      margin: 0 auto 20px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+      object-fit: contain;
+    }
+
+    .detail-block {
+      margin-bottom: 20px;
+    }
+
+    .detail-label {
+      font-size: 0.85em;
+      font-weight: 600;
+      opacity: 0.7;
+      margin-bottom: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .detail-text {
+      font-size: 1em;
+      line-height: 1.8;
+    }
+
+    .detail-title-artist {
+      font-size: 1.1em;
+      font-weight: 600;
+    }
+
+    /* スライダーラベル */
+    .axis-hint {
+      font-size: 0.85em;
+      opacity: 0.75;
+      margin-top: 2px;
+    }
+
+    input[type="range"] {
+      width: 100%;
+      height: 8px;
+      border-radius: 5px;
+      background: var(--light);
+      outline: none;
+      -webkit-appearance: none;
+    }
+
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: var(--accent);
+      cursor: pointer;
+    }
+
+    input[type="range"]::-moz-range-thumb {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: var(--accent);
+      cursor: pointer;
+      border: none;
+    }
+
+    /* スマホ調整 */
+    @media only screen and (max-width: 600px) {
+      body {
+        padding: 10px;
+      }
+
+      .container {
+        border-radius: 12px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+      }
+
+      header {
+        padding: 24px 16px;
+      }
+
+      header h1 {
+        font-size: 1.4em;
+      }
+
+      .main-content {
+        padding: 24px 16px;
+      }
+
+      .list-header {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      button {
+        width: 100%;
+      }
+
+      .artwork-card {
+        padding: 10px 12px;
+      }
+
+      .card-thumb {
+        width: 50px;
+        height: 50px;
+      }
+
+      .timer-display {
+        font-size: 2.2em;
+      }
+
+      .toast {
+        right: 10px;
+        left: 10px;
+        bottom: 10px;
+        max-width: calc(100% - 20px);
+      }
+
+      .restore-notification {
+        max-width: calc(100% - 40px);
+        padding: 16px 20px;
+      }
+    }
   </style>
 </head>
+
 <body>
-<p class="p1">&lt;!DOCTYPE html&gt;</p>
-<p class="p1">&lt;html lang="ja"&gt;</p>
-<p class="p2"><br></p>
-<p class="p1">&lt;head&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;meta charset="UTF-8"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;meta http-equiv="Content-Type" content="text/html; charset=utf-8"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;title&gt;美術鑑賞対話アシスタント v2.2 | Dissonance &amp; Insight&lt;/title&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;style&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>* {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>margin: 0;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>padding: 0;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>box-sizing: border-box;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>:root {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>--primary: #2C3E50;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>--secondary: #E74C3C;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>--accent: #3498DB;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>--success: #27AE60;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>--warning: #F39C12;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>--light: #ECF0F1;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>--dark: #34495E;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>--white: #FFFFFF;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>body {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>font-family: -apple-system, BlinkMacSystemFont, 'Hiragino Kaku Gothic ProN', 'Yu Gothic', 'Meiryo', sans-serif;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>line-height: 1.8;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>color: var(--primary);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>min-height: 100vh;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>padding: 20px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>-webkit-font-smoothing: antialiased;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>-moz-osx-font-smoothing: grayscale;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>.container {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>width: 100%;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>max-width: 900px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>margin: 0 auto;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>background: var(--white);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>border-radius: 20px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>overflow: hidden;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>header {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>background: linear-gradient(135deg, var(--primary) 0%, var(--dark) 100%);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>color: var(--white);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>padding: 40px 30px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>text-align: center;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>position: relative;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>header h1 {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>font-size: 2em;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>margin-bottom: 10px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>font-weight: 700;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>header p {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>opacity: 0.9;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>font-size: 0.95em;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>.version-badge {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>position: absolute;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>top: 15px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>right: 15px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>background: rgba(255, 255, 255, 0.2);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>padding: 5px 15px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>border-radius: 20px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>font-size: 0.8em;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>.top-nav {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>background: #f8fafc;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>border-bottom: 1px solid #e2e8f0;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>padding: 8px 16px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>text-align: right;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>.top-nav button {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>padding: 6px 12px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>font-size: 0.85em;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>.main-content {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>padding: 40px 30px;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>.section {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>display: none;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>.section.active {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>display: block;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>animation: fadeIn 0.5s ease;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>@keyframes fadeIn {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>from {</p>
-<p class="p1"><span class="Apple-converted-space">        </span>opacity: 0;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>transform: translateY(20px);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">      </span>to {</p>
-<p class="p1"><span class="Apple-converted-space">        </span>opacity: 1;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>transform: translateY(0);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>.form-group {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>margin-bottom: 25px;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>label {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>display: block;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>margin-bottom: 8px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>font-weight: 600;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>color: var(--primary);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>font-size: 0.95em;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>input[type="text"],</p>
-<p class="p1"><span class="Apple-converted-space">    </span>textarea {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>width: 100%;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>padding: 12px 15px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>border: 2px solid var(--light);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>border-radius: 8px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>font-size: 1em;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>transition: all 0.3s ease;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>font-family: inherit;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>input:focus,</p>
-<p class="p1"><span class="Apple-converted-space">    </span>textarea:focus {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>outline: none;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>border-color: var(--accent);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>textarea {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>resize: vertical;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>min-height: 100px;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>button {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>padding: 15px 30px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>border: none;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>border-radius: 8px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>font-size: 1em;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>font-weight: 600;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>cursor: pointer;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>transition: all 0.3s ease;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>font-family: inherit;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>-webkit-tap-highlight-color: transparent;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>.btn-primary {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>background: var(--accent);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>color: var(--white);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>.btn-primary:hover {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>background: #2980b9;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>transform: translateY(-2px);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>.btn-primary:active {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>transform: translateY(0);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>.btn-secondary {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>background: var(--light);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>color: var(--dark);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>.btn-secondary:hover {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>background: #d0d7de;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>/* タイマー */</p>
-<p class="p1"><span class="Apple-converted-space">    </span>.timer-box {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>color: white;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>padding: 20px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>border-radius: 12px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>margin: 20px 0;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>text-align: center;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>.timer-display {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>font-size: 3em;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>font-weight: bold;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>font-family: 'Courier New', monospace;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>margin: 15px 0;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>.timer-btn {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>padding: 10px 20px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>border: 2px solid white;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>background: transparent;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>color: white;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>border-radius: 6px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>cursor: pointer;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>font-weight: 600;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>transition: all 0.3s ease;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>margin: 0 5px;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>.timer-btn:hover {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>background: white;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>color: #f5576c;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>/* 写真アップロード */</p>
-<p class="p1"><span class="Apple-converted-space">    </span>.photo-upload-area {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>border: 3px dashed var(--light);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>border-radius: 12px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>padding: 40px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>text-align: center;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>cursor: pointer;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>transition: all 0.3s ease;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>margin: 20px 0;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>.photo-upload-area:hover {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>border-color: var(--accent);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>background: rgba(52, 152, 219, 0.05);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>.photo-preview {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>width: 100%;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>max-width: 100%;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>height: 300px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>border-radius: 8px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>margin-top: 15px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>object-fit: contain;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>/* 復元通知 */</p>
-<p class="p1"><span class="Apple-converted-space">    </span>.restore-notification {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>position: fixed;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>top: 20px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>left: 50%;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>transform: translateX(-50%);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>background: white;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>padding: 20px 30px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>border-radius: 12px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>z-index: 2000;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>display: none;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>max-width: 90%;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>.restore-notification.show {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>display: block;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>animation: slideDown 0.3s ease;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>@keyframes slideDown {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>from {</p>
-<p class="p1"><span class="Apple-converted-space">        </span>opacity: 0;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>transform: translateX(-50%) translateY(-20px);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">      </span>to {</p>
-<p class="p1"><span class="Apple-converted-space">        </span>opacity: 1;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>transform: translateX(-50%) translateY(0);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>/* Toast */</p>
-<p class="p1"><span class="Apple-converted-space">    </span>.toast {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>position: fixed;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>bottom: 30px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>right: 30px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>background: var(--success);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>color: var(--white);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>padding: 15px 25px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>border-radius: 8px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>opacity: 0;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>transform: translateY(50px);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>transition: all 0.3s ease;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>z-index: 1000;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>max-width: 300px;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>.toast.show {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>opacity: 1;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>transform: translateY(0);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>/* 一覧用カード */</p>
-<p class="p1"><span class="Apple-converted-space">    </span>.list-header {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>display: flex;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>justify-content: space-between;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>align-items: center;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>margin-bottom: 20px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>gap: 10px;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>.artwork-list {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>display: flex;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>flex-direction: column;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>gap: 12px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>margin-top: 10px;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>.artwork-card {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>display: flex;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>align-items: center;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>gap: 15px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>padding: 12px 15px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>border-radius: 10px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>border: 1px solid var(--light);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>cursor: pointer;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>transition: background 0.2s ease, transform 0.1s ease, box-shadow 0.2s ease;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>.artwork-card:hover {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>background: #f8fafc;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>transform: translateY(-1px);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>.artwork-card:active {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>transform: translateY(0);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>.card-thumb {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>width: 60px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>height: 60px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>border-radius: 8px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>object-fit: cover;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>background: #ddd;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>flex-shrink: 0;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>.card-meta {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>display: flex;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>flex-direction: column;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>gap: 3px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>flex: 1;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>.card-title {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>font-weight: 600;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>font-size: 0.98em;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>.card-artist {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>font-size: 0.9em;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>opacity: 0.8;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>.card-date {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>font-size: 0.8em;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>opacity: 0.7;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>.empty-state {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>text-align: center;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>padding: 30px 10px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>opacity: 0.8;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>font-size: 0.95em;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>/* 詳細表示 */</p>
-<p class="p1"><span class="Apple-converted-space">    </span>.detail-photo {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>max-width: 100%;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>max-height: 400px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>border-radius: 12px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>display: block;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>margin: 0 auto 20px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>object-fit: contain;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>.detail-block {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>margin-bottom: 20px;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>.detail-label {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>font-size: 0.85em;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>font-weight: 600;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>opacity: 0.7;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>margin-bottom: 4px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>text-transform: uppercase;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>letter-spacing: 0.06em;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>.detail-text {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>font-size: 1em;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>line-height: 1.8;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>.detail-title-artist {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>font-size: 1.1em;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>font-weight: 600;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>/* スライダーラベル */</p>
-<p class="p1"><span class="Apple-converted-space">    </span>.axis-hint {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>font-size: 0.85em;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>opacity: 0.75;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>margin-top: 2px;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>input[type="range"] {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>width: 100%;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>height: 8px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>border-radius: 5px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>background: var(--light);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>outline: none;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>-webkit-appearance: none;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>input[type="range"]::-webkit-slider-thumb {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>-webkit-appearance: none;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>appearance: none;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>width: 20px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>height: 20px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>border-radius: 50%;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>background: var(--accent);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>cursor: pointer;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>input[type="range"]::-moz-range-thumb {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>width: 20px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>height: 20px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>border-radius: 50%;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>background: var(--accent);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>cursor: pointer;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>border: none;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>/* スマホ調整 */</p>
-<p class="p1"><span class="Apple-converted-space">    </span>@media only screen and (max-width: 600px) {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>body {</p>
-<p class="p1"><span class="Apple-converted-space">        </span>padding: 10px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">      </span>.container {</p>
-<p class="p1"><span class="Apple-converted-space">        </span>border-radius: 12px;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">      </span>header {</p>
-<p class="p1"><span class="Apple-converted-space">        </span>padding: 24px 16px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">      </span>header h1 {</p>
-<p class="p1"><span class="Apple-converted-space">        </span>font-size: 1.4em;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">      </span>.main-content {</p>
-<p class="p1"><span class="Apple-converted-space">        </span>padding: 24px 16px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">      </span>.list-header {</p>
-<p class="p1"><span class="Apple-converted-space">        </span>flex-direction: column;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>align-items: stretch;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">      </span>button {</p>
-<p class="p1"><span class="Apple-converted-space">        </span>width: 100%;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">      </span>.artwork-card {</p>
-<p class="p1"><span class="Apple-converted-space">        </span>padding: 10px 12px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">      </span>.card-thumb {</p>
-<p class="p1"><span class="Apple-converted-space">        </span>width: 50px;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>height: 50px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">      </span>.timer-display {</p>
-<p class="p1"><span class="Apple-converted-space">        </span>font-size: 2.2em;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">      </span>.toast {</p>
-<p class="p1"><span class="Apple-converted-space">        </span>right: 10px;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>left: 10px;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>bottom: 10px;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>max-width: calc(100% - 20px);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">      </span>.restore-notification {</p>
-<p class="p1"><span class="Apple-converted-space">        </span>max-width: calc(100% - 40px);</p>
-<p class="p1"><span class="Apple-converted-space">        </span>padding: 16px 20px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;/style&gt;</p>
-<p class="p1">&lt;/head&gt;</p>
-<p class="p2"><br></p>
-<p class="p1">&lt;body&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;div class="container"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;header&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="version-badge"&gt;v2.2 Time×Space&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;h1&gt;🎨 美術鑑賞対話アシスタント&lt;/h1&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;p&gt;Dissonance &amp; Insight - Personal Edition&lt;/p&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;/header&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="top-nav"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;button class="btn-secondary" onclick="showSection('sectionList')"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>トップ（一覧）に戻る</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="main-content"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;!-- 作品一覧 --&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="section active" id="sectionList"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="list-header"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;h2&gt;📚 鑑賞記録一覧&lt;/h2&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;div style="display:flex; gap:8px; flex-wrap:wrap;"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;button class="btn-secondary" onclick="exportAllAsMarkdown()"&gt;💾 全件Markdown&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;button class="btn-primary" onclick="startNewArtwork()"&gt;＋ 新しい作品を鑑賞&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div id="artworkListContainer"&gt;&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;!-- 作品基本情報 --&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="section" id="section1"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;h2 style="margin-bottom: 25px;"&gt;📋 作品の基本情報&lt;/h2&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="form-group"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;label&gt;作品の写真 &lt;span style="opacity: 0.7;"&gt;(推奨)&lt;/span&gt;&lt;/label&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;div class="photo-upload-area" onclick="document.getElementById('photoInput').click()"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;div id="uploadPrompt"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">              </span>&lt;div style="font-size: 3em; margin-bottom: 10px;"&gt;📷&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">              </span>&lt;p style="font-weight: 600;"&gt;クリックして写真を選択（カメラ起動可）&lt;/p&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;img id="photoPreview" class="photo-preview" style="display: none;"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;input type="file" id="photoInput" accept="image/*" capture="environment" style="display: none;"</p>
-<p class="p1"><span class="Apple-converted-space">            </span>onchange="handlePhotoUpload(event)"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="form-group"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;label&gt;作品名 *&lt;/label&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;input type="text" id="artworkTitle" placeholder="例: 睡蓮"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="form-group"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;label&gt;作家名 *&lt;/label&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;input type="text" id="artistName" placeholder="例: クロード・モネ"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div style="display:flex; gap:10px; margin-top:20px; flex-wrap:wrap;"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;button class="btn-secondary" onclick="showSection('sectionList')"&gt;← 一覧に戻る&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;button class="btn-primary" onclick="goToStep(2)" style="flex:1;"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>次へ：第一印象を記録 →</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;!-- 第一印象 + 時間×空間軸 --&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="section" id="section2"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;h2 style="margin-bottom: 25px;"&gt;👁️ あなたの第一印象&lt;/h2&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="timer-box"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;div style="font-size: 1.2em; font-weight: 600;"&gt;⏰ 第一印象タイマー&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;div class="timer-display" id="timerDisplay"&gt;3:00&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;p style="font-size: 0.9em; opacity: 0.9;"&gt;理性が介入する前の「生の反応」を記録&lt;/p&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;div style="margin-top: 15px;"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;button class="timer-btn" onclick="startTimer()"&gt;スタート&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;button class="timer-btn" onclick="resetTimer()"&gt;リセット&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="form-group"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;label&gt;一文での第一印象 *&lt;/label&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;textarea id="firstImpression" rows="3" placeholder="例: 輪郭がなくてぼんやりしているけど、なぜか心が落ち着く絵"&gt;&lt;/textarea&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="form-group"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;label&gt;時間的距離（過去 ← 現在 → 未来）&lt;/label&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;input type="range" id="axisTime" min="0" max="100" value="50" oninput="updateAxisLabels()"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;div id="axisTimeLabel" class="axis-hint"&gt;現在&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;div class="axis-hint"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>ヒント例：制作当時の観客／今の自分／100年後の誰かとして見た時の違いをイメージする</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="form-group"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;label&gt;物理的距離（接近 ← 標準 → 遠景）&lt;/label&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;input type="range" id="axisSpace" min="0" max="100" value="50" oninput="updateAxisLabels()"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;div id="axisSpaceLabel" class="axis-hint"&gt;標準（2m）&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;div class="axis-hint"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>ヒント例：30cmまで近づいた時／2m離れた時／展示室の端から見た時の見え方の違いを思い出す</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div style="display:flex; gap:10px; margin-top:20px; flex-wrap:wrap;"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;button class="btn-secondary" onclick="goToStep(1)"&gt;← 前に戻る&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;button class="btn-primary" onclick="completeSession()" style="flex:1;"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>記録を保存 ✓</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;!-- 保存完了 --&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="section" id="section3"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;h2 style="margin-bottom: 25px;"&gt;✅ 保存完了&lt;/h2&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div style="background: #d1ecf1; padding: 30px; border-radius: 12px; text-align: center;"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;div style="font-size: 4em; margin-bottom: 15px;"&gt;💾&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;h3 style="color: var(--primary); margin-bottom: 15px;"&gt;データを保存しました&lt;/h3&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;p style="opacity: 0.8; line-height: 1.8;"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>あなたの鑑賞記録はブラウザに保存されています。&lt;br&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>一覧画面から、いつでも見返すことができます。</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;/p&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;div style="display: flex; gap: 10px; justify-content: center; margin-top: 20px; flex-wrap:wrap;"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;button class="btn-primary" onclick="showSection('sectionList')"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">              </span>一覧に戻る 📚</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;button class="btn-secondary" onclick="startNewArtwork()"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">              </span>続けて新しい作品を鑑賞 →</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;!-- 作品詳細 --&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="section" id="sectionDetail"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;h2 style="margin-bottom: 25px;"&gt;🖼️ 鑑賞記録の詳細&lt;/h2&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div id="detailContent"&gt;&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div style="display: flex; gap: 10px; margin-top: 20px; flex-wrap:wrap;"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;button class="btn-secondary" onclick="showSection('sectionList')"&gt;一覧に戻る&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;button class="btn-secondary" onclick="exportDetailAsMarkdown()"&gt;Markdownで書き出す&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;button class="btn-primary" onclick="startNewArtwork()"&gt;新しい作品を鑑賞&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;!-- 復元通知 --&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;div class="restore-notification" id="restoreNotification"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;h3 style="margin-bottom: 15px;"&gt;💾 前回の途中データがあります&lt;/h3&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;p style="margin-bottom: 20px;"&gt;続きから始めますか？&lt;/p&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;div style="display: flex; gap: 10px;"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;button class="btn-primary" onclick="restoreData()"&gt;復元する&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;button class="btn-secondary" onclick="dismissRestore()"&gt;新規作成&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;!-- Toast --&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;div class="toast" id="toast"&gt;&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;script&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>// 進行中データ</p>
-<p class="p1"><span class="Apple-converted-space">    </span>let artworkData = {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>id: null,</p>
-<p class="p1"><span class="Apple-converted-space">      </span>title: '', artist: '', firstImpression: '',</p>
-<p class="p1"><span class="Apple-converted-space">      </span>photoDataURL: '', timestamp: null,</p>
-<p class="p1"><span class="Apple-converted-space">      </span>axisTime: 50,</p>
-<p class="p1"><span class="Apple-converted-space">      </span>axisSpace: 50</p>
-<p class="p1"><span class="Apple-converted-space">    </span>};</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>let currentStep = 1;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>let timerInterval = null;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>let timerSeconds = 180;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>let currentDetailId = null;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>// ページ読み込み時</p>
-<p class="p1"><span class="Apple-converted-space">    </span>window.addEventListener('DOMContentLoaded', function () {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>checkForSavedData();</p>
-<p class="p1"><span class="Apple-converted-space">      </span>renderArtworkList();</p>
-<p class="p1"><span class="Apple-converted-space">      </span>updateAxisLabels();</p>
-<p class="p1"><span class="Apple-converted-space">    </span>});</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>// localStorage ヘルパ</p>
-<p class="p1"><span class="Apple-converted-space">    </span>function getArtworkRecords() {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>const raw = localStorage.getItem('artworkRecords');</p>
-<p class="p1"><span class="Apple-converted-space">      </span>if (!raw) return [];</p>
-<p class="p1"><span class="Apple-converted-space">      </span>try {</p>
-<p class="p1"><span class="Apple-converted-space">        </span>const parsed = JSON.parse(raw);</p>
-<p class="p1"><span class="Apple-converted-space">        </span>return Array.isArray(parsed) ? parsed : [];</p>
-<p class="p1"><span class="Apple-converted-space">      </span>} catch (e) {</p>
-<p class="p1"><span class="Apple-converted-space">        </span>console.error('Failed to parse artworkRecords', e);</p>
-<p class="p1"><span class="Apple-converted-space">        </span>return [];</p>
-<p class="p1"><span class="Apple-converted-space">      </span>}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>function saveArtworkRecords(records) {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>localStorage.setItem('artworkRecords', JSON.stringify(records));</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>// 一覧描画</p>
-<p class="p1"><span class="Apple-converted-space">    </span>function renderArtworkList() {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>const container = document.getElementById('artworkListContainer');</p>
-<p class="p1"><span class="Apple-converted-space">      </span>const records = getArtworkRecords();</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">      </span>if (!records.length) {</p>
-<p class="p1"><span class="Apple-converted-space">        </span>container.innerHTML = `</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;div class="empty-state"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>まだ鑑賞記録はありません。&lt;br&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>「＋ 新しい作品を鑑賞」から、最初の1枚を記録してみましょう。</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>`;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>return;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">      </span>records.sort((a, b) =&gt; (b.timestamp || 0) - (a.timestamp || 0));</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">      </span>const listEl = document.createElement('div');</p>
-<p class="p1"><span class="Apple-converted-space">      </span>listEl.className = 'artwork-list';</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">      </span>records.forEach(rec =&gt; {</p>
-<p class="p1"><span class="Apple-converted-space">        </span>const card = document.createElement('div');</p>
-<p class="p1"><span class="Apple-converted-space">        </span>card.className = 'artwork-card';</p>
-<p class="p1"><span class="Apple-converted-space">        </span>card.onclick = () =&gt; openDetail(rec.id);</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>let thumb;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>if (rec.photoDataURL) {</p>
-<p class="p1"><span class="Apple-converted-space">          </span>thumb = document.createElement('img');</p>
-<p class="p1"><span class="Apple-converted-space">          </span>thumb.src = rec.photoDataURL;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>thumb.className = 'card-thumb';</p>
-<p class="p1"><span class="Apple-converted-space">        </span>} else {</p>
-<p class="p1"><span class="Apple-converted-space">          </span>thumb = document.createElement('div');</p>
-<p class="p1"><span class="Apple-converted-space">          </span>thumb.className = 'card-thumb';</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>const meta = document.createElement('div');</p>
-<p class="p1"><span class="Apple-converted-space">        </span>meta.className = 'card-meta';</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>const title = document.createElement('div');</p>
-<p class="p1"><span class="Apple-converted-space">        </span>title.className = 'card-title';</p>
-<p class="p1"><span class="Apple-converted-space">        </span>title.textContent = rec.title || '（無題）';</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>const artist = document.createElement('div');</p>
-<p class="p1"><span class="Apple-converted-space">        </span>artist.className = 'card-artist';</p>
-<p class="p1"><span class="Apple-converted-space">        </span>artist.textContent = rec.artist || '作者不明';</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>const date = document.createElement('div');</p>
-<p class="p1"><span class="Apple-converted-space">        </span>date.className = 'card-date';</p>
-<p class="p1"><span class="Apple-converted-space">        </span>date.textContent = formatRelativeTime(rec.timestamp);</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>meta.appendChild(title);</p>
-<p class="p1"><span class="Apple-converted-space">        </span>meta.appendChild(artist);</p>
-<p class="p1"><span class="Apple-converted-space">        </span>meta.appendChild(date);</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>card.appendChild(thumb);</p>
-<p class="p1"><span class="Apple-converted-space">        </span>card.appendChild(meta);</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>listEl.appendChild(card);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>});</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">      </span>container.innerHTML = '';</p>
-<p class="p1"><span class="Apple-converted-space">      </span>container.appendChild(listEl);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>function formatRelativeTime(timestamp) {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>if (!timestamp) return '';</p>
-<p class="p1"><span class="Apple-converted-space">      </span>const now = Date.now();</p>
-<p class="p1"><span class="Apple-converted-space">      </span>const diffMs = now - timestamp;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>const diffSec = Math.floor(diffMs / 1000);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>const diffMin = Math.floor(diffSec / 60);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>const diffHr = Math.floor(diffMin / 60);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>const diffDay = Math.floor(diffHr / 24);</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">      </span>if (diffSec &lt; 60) return 'たった今';</p>
-<p class="p1"><span class="Apple-converted-space">      </span>if (diffMin &lt; 60) return diffMin + '分前';</p>
-<p class="p1"><span class="Apple-converted-space">      </span>if (diffHr &lt; 24) return diffHr + '時間前';</p>
-<p class="p1"><span class="Apple-converted-space">      </span>if (diffDay === 1) return '昨日';</p>
-<p class="p1"><span class="Apple-converted-space">      </span>if (diffDay &lt; 7) return diffDay + '日前';</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">      </span>const d = new Date(timestamp);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>const y = d.getFullYear();</p>
-<p class="p1"><span class="Apple-converted-space">      </span>const m = d.getMonth() + 1;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>const day = d.getDate();</p>
-<p class="p1"><span class="Apple-converted-space">      </span>return `${y}/${m}/${day}`;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>// 新規開始</p>
-<p class="p1"><span class="Apple-converted-space">    </span>function startNewArtwork() {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>artworkData = {</p>
-<p class="p1"><span class="Apple-converted-space">        </span>id: null,</p>
-<p class="p1"><span class="Apple-converted-space">        </span>title: '', artist: '', firstImpression: '',</p>
-<p class="p1"><span class="Apple-converted-space">        </span>photoDataURL: '', timestamp: null,</p>
-<p class="p1"><span class="Apple-converted-space">        </span>axisTime: 50,</p>
-<p class="p1"><span class="Apple-converted-space">        </span>axisSpace: 50</p>
-<p class="p1"><span class="Apple-converted-space">      </span>};</p>
-<p class="p1"><span class="Apple-converted-space">      </span>localStorage.removeItem('artworkData_v2');</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">      </span>document.getElementById('artworkTitle').value = '';</p>
-<p class="p1"><span class="Apple-converted-space">      </span>document.getElementById('artistName').value = '';</p>
-<p class="p1"><span class="Apple-converted-space">      </span>document.getElementById('firstImpression').value = '';</p>
-<p class="p1"><span class="Apple-converted-space">      </span>document.getElementById('photoPreview').style.display = 'none';</p>
-<p class="p1"><span class="Apple-converted-space">      </span>document.getElementById('uploadPrompt').style.display = 'block';</p>
-<p class="p1"><span class="Apple-converted-space">      </span>document.getElementById('photoPreview').src = '';</p>
-<p class="p1"><span class="Apple-converted-space">      </span>document.getElementById('axisTime').value = 50;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>document.getElementById('axisSpace').value = 50;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>updateAxisLabels();</p>
-<p class="p1"><span class="Apple-converted-space">      </span>resetTimer();</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">      </span>showSection('section1');</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>// セクション表示</p>
-<p class="p1"><span class="Apple-converted-space">    </span>function showSection(id) {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>document.querySelectorAll('.section').forEach(s =&gt; s.classList.remove('active'));</p>
-<p class="p1"><span class="Apple-converted-space">      </span>document.getElementById(id).classList.add('active');</p>
-<p class="p1"><span class="Apple-converted-space">      </span>window.scrollTo({ top: 0, behavior: 'smooth' });</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>// 途中保存確認</p>
-<p class="p1"><span class="Apple-converted-space">    </span>function checkForSavedData() {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>const saved = localStorage.getItem('artworkData_v2');</p>
-<p class="p1"><span class="Apple-converted-space">      </span>if (saved) {</p>
-<p class="p1"><span class="Apple-converted-space">        </span>const data = JSON.parse(saved);</p>
-<p class="p1"><span class="Apple-converted-space">        </span>const hoursSince = (new Date().getTime() - data.timestamp) / (1000 * 60 * 60);</p>
-<p class="p1"><span class="Apple-converted-space">        </span>if (hoursSince &lt; 24) {</p>
-<p class="p1"><span class="Apple-converted-space">          </span>document.getElementById('restoreNotification').classList.add('show');</p>
-<p class="p1"><span class="Apple-converted-space">        </span>} else {</p>
-<p class="p1"><span class="Apple-converted-space">          </span>localStorage.removeItem('artworkData_v2');</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p1"><span class="Apple-converted-space">      </span>}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>function restoreData() {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>const saved = localStorage.getItem('artworkData_v2');</p>
-<p class="p1"><span class="Apple-converted-space">      </span>if (saved) {</p>
-<p class="p1"><span class="Apple-converted-space">        </span>artworkData = JSON.parse(saved);</p>
-<p class="p1"><span class="Apple-converted-space">        </span>document.getElementById('artworkTitle').value = artworkData.title || '';</p>
-<p class="p1"><span class="Apple-converted-space">        </span>document.getElementById('artistName').value = artworkData.artist || '';</p>
-<p class="p1"><span class="Apple-converted-space">        </span>document.getElementById('firstImpression').value = artworkData.firstImpression || '';</p>
-<p class="p1"><span class="Apple-converted-space">        </span>if (artworkData.photoDataURL) {</p>
-<p class="p1"><span class="Apple-converted-space">          </span>document.getElementById('photoPreview').src = artworkData.photoDataURL;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>document.getElementById('photoPreview').style.display = 'block';</p>
-<p class="p1"><span class="Apple-converted-space">          </span>document.getElementById('uploadPrompt').style.display = 'none';</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p1"><span class="Apple-converted-space">        </span>document.getElementById('axisTime').value = artworkData.axisTime ?? 50;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>document.getElementById('axisSpace').value = artworkData.axisSpace ?? 50;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>updateAxisLabels();</p>
-<p class="p1"><span class="Apple-converted-space">        </span>showToast('✅ 前回のデータを復元しました');</p>
-<p class="p1"><span class="Apple-converted-space">        </span>showSection('section1');</p>
-<p class="p1"><span class="Apple-converted-space">      </span>}</p>
-<p class="p1"><span class="Apple-converted-space">      </span>dismissRestore();</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>function dismissRestore() {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>document.getElementById('restoreNotification').classList.remove('show');</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>function autoSave() {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>artworkData.timestamp = new Date().getTime();</p>
-<p class="p1"><span class="Apple-converted-space">      </span>localStorage.setItem('artworkData_v2', JSON.stringify(artworkData));</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>// 写真アップロード</p>
-<p class="p1"><span class="Apple-converted-space">    </span>function handlePhotoUpload(event) {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>const file = event.target.files[0];</p>
-<p class="p1"><span class="Apple-converted-space">      </span>if (file) {</p>
-<p class="p1"><span class="Apple-converted-space">        </span>const reader = new FileReader();</p>
-<p class="p1"><span class="Apple-converted-space">        </span>reader.onload = function (e) {</p>
-<p class="p1"><span class="Apple-converted-space">          </span>artworkData.photoDataURL = e.target.result;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>document.getElementById('photoPreview').src = e.target.result;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>document.getElementById('photoPreview').style.display = 'block';</p>
-<p class="p1"><span class="Apple-converted-space">          </span>document.getElementById('uploadPrompt').style.display = 'none';</p>
-<p class="p1"><span class="Apple-converted-space">          </span>autoSave();</p>
-<p class="p1"><span class="Apple-converted-space">          </span>showToast('✅ 写真をアップロードしました');</p>
-<p class="p1"><span class="Apple-converted-space">        </span>};</p>
-<p class="p1"><span class="Apple-converted-space">        </span>reader.readAsDataURL(file);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>// タイマー</p>
-<p class="p1"><span class="Apple-converted-space">    </span>function startTimer() {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>if (timerInterval) return;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>timerInterval = setInterval(() =&gt; {</p>
-<p class="p1"><span class="Apple-converted-space">        </span>timerSeconds--;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>updateTimerDisplay();</p>
-<p class="p1"><span class="Apple-converted-space">        </span>if (timerSeconds &lt;= 0) {</p>
-<p class="p1"><span class="Apple-converted-space">          </span>clearInterval(timerInterval);</p>
-<p class="p1"><span class="Apple-converted-space">          </span>timerInterval = null;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>showToast('⏰ 3分経過しました！', 'warning');</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p1"><span class="Apple-converted-space">      </span>}, 1000);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>function resetTimer() {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>clearInterval(timerInterval);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>timerInterval = null;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>timerSeconds = 180;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>updateTimerDisplay();</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>function updateTimerDisplay() {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>const min = Math.floor(timerSeconds / 60);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>const sec = timerSeconds % 60;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>document.getElementById('timerDisplay').textContent =</p>
-<p class="p1"><span class="Apple-converted-space">        </span>`${min}:${sec.toString().padStart(2, '0')}`;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>// 時間×空間軸ラベル</p>
-<p class="p1"><span class="Apple-converted-space">    </span>function labelTimeDistance(v) {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>if (v &lt;= 10) return '過去（制作当時）寄り';</p>
-<p class="p1"><span class="Apple-converted-space">      </span>if (v &gt;= 90) return '未来（100年後）寄り';</p>
-<p class="p1"><span class="Apple-converted-space">      </span>if (v &lt; 40) return 'やや過去寄り';</p>
-<p class="p1"><span class="Apple-converted-space">      </span>if (v &gt; 60) return 'やや未来寄り';</p>
-<p class="p1"><span class="Apple-converted-space">      </span>return '現在';</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>function labelPhysicalDistance(v) {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>if (v &lt;= 10) return '接近（30cm）に近い';</p>
-<p class="p1"><span class="Apple-converted-space">      </span>if (v &gt;= 90) return '遠景（50m）に近い';</p>
-<p class="p1"><span class="Apple-converted-space">      </span>if (v &lt; 40) return '標準より近い';</p>
-<p class="p1"><span class="Apple-converted-space">      </span>if (v &gt; 60) return '標準より遠い';</p>
-<p class="p1"><span class="Apple-converted-space">      </span>return '標準（2m）';</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>function updateAxisLabels() {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>const t = parseInt(document.getElementById('axisTime').value, 10);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>const s = parseInt(document.getElementById('axisSpace').value, 10);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>document.getElementById('axisTimeLabel').textContent = labelTimeDistance(t);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>document.getElementById('axisSpaceLabel').textContent = labelPhysicalDistance(s);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>// ステップ移動</p>
-<p class="p1"><span class="Apple-converted-space">    </span>function goToStep(step) {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>if (step === 2) {</p>
-<p class="p1"><span class="Apple-converted-space">        </span>const title = document.getElementById('artworkTitle').value.trim();</p>
-<p class="p1"><span class="Apple-converted-space">        </span>const artist = document.getElementById('artistName').value.trim();</p>
-<p class="p1"><span class="Apple-converted-space">        </span>if (!title || !artist) {</p>
-<p class="p1"><span class="Apple-converted-space">          </span>showToast('⚠️ 作品名と作家名を入力してください', 'warning');</p>
-<p class="p1"><span class="Apple-converted-space">          </span>return;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p1"><span class="Apple-converted-space">        </span>artworkData.title = title;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>artworkData.artist = artist;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>autoSave();</p>
-<p class="p1"><span class="Apple-converted-space">      </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">      </span>document.querySelectorAll('.section').forEach(s =&gt; s.classList.remove('active'));</p>
-<p class="p1"><span class="Apple-converted-space">      </span>document.getElementById('section' + step).classList.add('active');</p>
-<p class="p1"><span class="Apple-converted-space">      </span>currentStep = step;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>window.scrollTo({ top: 0, behavior: 'smooth' });</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>// セッション完了 → 多作品配列へ保存</p>
-<p class="p1"><span class="Apple-converted-space">    </span>function completeSession() {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>const impression = document.getElementById('firstImpression').value.trim();</p>
-<p class="p1"><span class="Apple-converted-space">      </span>if (!impression) {</p>
-<p class="p1"><span class="Apple-converted-space">        </span>showToast('⚠️ 第一印象を入力してください', 'warning');</p>
-<p class="p1"><span class="Apple-converted-space">        </span>return;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>}</p>
-<p class="p1"><span class="Apple-converted-space">      </span>artworkData.firstImpression = impression;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>artworkData.timestamp = new Date().getTime();</p>
-<p class="p1"><span class="Apple-converted-space">      </span>artworkData.axisTime = parseInt(document.getElementById('axisTime').value, 10);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>artworkData.axisSpace = parseInt(document.getElementById('axisSpace').value, 10);</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">      </span>if (!artworkData.id) {</p>
-<p class="p1"><span class="Apple-converted-space">        </span>artworkData.id = 'art_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">      </span>const records = getArtworkRecords();</p>
-<p class="p1"><span class="Apple-converted-space">      </span>records.push(artworkData);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>saveArtworkRecords(records);</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">      </span>localStorage.removeItem('artworkData_v2');</p>
-<p class="p1"><span class="Apple-converted-space">      </span>renderArtworkList();</p>
-<p class="p1"><span class="Apple-converted-space">      </span>showSection('section3');</p>
-<p class="p1"><span class="Apple-converted-space">      </span>showToast('✅ 鑑賞記録を保存しました！');</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>// 詳細表示</p>
-<p class="p1"><span class="Apple-converted-space">    </span>function openDetail(id) {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>const records = getArtworkRecords();</p>
-<p class="p1"><span class="Apple-converted-space">      </span>const rec = records.find(r =&gt; r.id === id);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>if (!rec) {</p>
-<p class="p1"><span class="Apple-converted-space">        </span>showToast('⚠️ データが見つかりませんでした', 'warning');</p>
-<p class="p1"><span class="Apple-converted-space">        </span>return;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>}</p>
-<p class="p1"><span class="Apple-converted-space">      </span>currentDetailId = id;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">      </span>const container = document.getElementById('detailContent');</p>
-<p class="p1"><span class="Apple-converted-space">      </span>container.innerHTML = '';</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">      </span>if (rec.photoDataURL) {</p>
-<p class="p1"><span class="Apple-converted-space">        </span>const img = document.createElement('img');</p>
-<p class="p1"><span class="Apple-converted-space">        </span>img.src = rec.photoDataURL;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>img.className = 'detail-photo';</p>
-<p class="p1"><span class="Apple-converted-space">        </span>container.appendChild(img);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">      </span>const infoBlock = document.createElement('div');</p>
-<p class="p1"><span class="Apple-converted-space">      </span>infoBlock.className = 'detail-block';</p>
-<p class="p1"><span class="Apple-converted-space">      </span>infoBlock.innerHTML = `</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="detail-title-artist"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>${rec.title || '（無題）'}&lt;br&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;span style="font-size:0.9em; opacity:0.8;"&gt;${rec.artist || '作者不明'}&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>`;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>container.appendChild(infoBlock);</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">      </span>const dateBlock = document.createElement('div');</p>
-<p class="p1"><span class="Apple-converted-space">      </span>dateBlock.className = 'detail-block';</p>
-<p class="p1"><span class="Apple-converted-space">      </span>const dt = new Date(rec.timestamp || Date.now());</p>
-<p class="p1"><span class="Apple-converted-space">      </span>const dtText = `${dt.getFullYear()}年${dt.getMonth() + 1}月${dt.getDate()}日 `</p>
-<p class="p1"><span class="Apple-converted-space">        </span>+ `${dt.getHours().toString().padStart(2, '0')}:${dt.getMinutes().toString().padStart(2, '0')}`;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>dateBlock.innerHTML = `</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="detail-label"&gt;鑑賞日時&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="detail-text"&gt;${dtText}&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>`;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>container.appendChild(dateBlock);</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">      </span>const impressionBlock = document.createElement('div');</p>
-<p class="p1"><span class="Apple-converted-space">      </span>impressionBlock.className = 'detail-block';</p>
-<p class="p1"><span class="Apple-converted-space">      </span>impressionBlock.innerHTML = `</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="detail-label"&gt;第一印象&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="detail-text"&gt;${(rec.firstImpression || '').replace(/\n/g, '&lt;br&gt;') || '（未入力）'}&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>`;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>container.appendChild(impressionBlock);</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">      </span>const axisBlock = document.createElement('div');</p>
-<p class="p1"><span class="Apple-converted-space">      </span>axisBlock.className = 'detail-block';</p>
-<p class="p1"><span class="Apple-converted-space">      </span>const tLabel = labelTimeDistance(rec.axisTime ?? 50);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>const sLabel = labelPhysicalDistance(rec.axisSpace ?? 50);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>axisBlock.innerHTML = `</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="detail-label"&gt;時間 × 空間の感覚&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="detail-text"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>時間的距離：${tLabel}&lt;br&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>物理的距離：${sLabel}</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>`;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>container.appendChild(axisBlock);</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">      </span>showSection('sectionDetail');</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>// Markdown書き出し用</p>
-<p class="p1"><span class="Apple-converted-space">    </span>function formatDateForMD(timestamp) {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>const d = new Date(timestamp || Date.now());</p>
-<p class="p1"><span class="Apple-converted-space">      </span>const y = d.getFullYear();</p>
-<p class="p1"><span class="Apple-converted-space">      </span>const m = (d.getMonth() + 1).toString().padStart(2, '0');</p>
-<p class="p1"><span class="Apple-converted-space">      </span>const day = d.getDate().toString().padStart(2, '0');</p>
-<p class="p1"><span class="Apple-converted-space">      </span>const hh = d.getHours().toString().padStart(2, '0');</p>
-<p class="p1"><span class="Apple-converted-space">      </span>const mm = d.getMinutes().toString().padStart(2, '0');</p>
-<p class="p1"><span class="Apple-converted-space">      </span>return `${y}-${m}-${day} ${hh}:${mm}`;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>function markdownForArtwork(rec) {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>const title = rec.title || '（無題）';</p>
-<p class="p1"><span class="Apple-converted-space">      </span>const artist = rec.artist || '作者不明';</p>
-<p class="p1"><span class="Apple-converted-space">      </span>const dt = formatDateForMD(rec.timestamp);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>const tLabel = labelTimeDistance(rec.axisTime ?? 50);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>const sLabel = labelPhysicalDistance(rec.axisSpace ?? 50);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>const impression = rec.firstImpression || '';</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">      </span>return [</p>
-<p class="p1"><span class="Apple-converted-space">        </span>`# ${title} – ${artist}`,</p>
-<p class="p1"><span class="Apple-converted-space">        </span>'',</p>
-<p class="p1"><span class="Apple-converted-space">        </span>`- 鑑賞日時: ${dt}`,</p>
-<p class="p1"><span class="Apple-converted-space">        </span>`- 時間的距離: ${tLabel}`,</p>
-<p class="p1"><span class="Apple-converted-space">        </span>`- 物理的距離: ${sLabel}`,</p>
-<p class="p1"><span class="Apple-converted-space">        </span>'',</p>
-<p class="p1"><span class="Apple-converted-space">        </span>'## 第一印象',</p>
-<p class="p1"><span class="Apple-converted-space">        </span>impression,</p>
-<p class="p1"><span class="Apple-converted-space">        </span>'',</p>
-<p class="p1"><span class="Apple-converted-space">        </span>'## 時間 × 空間の感覚',</p>
-<p class="p1"><span class="Apple-converted-space">        </span>`- 時間的距離: ${tLabel}`,</p>
-<p class="p1"><span class="Apple-converted-space">        </span>`- 物理的距離: ${sLabel}`,</p>
-<p class="p1"><span class="Apple-converted-space">        </span>''</p>
-<p class="p1"><span class="Apple-converted-space">      </span>].join('\n');</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>function downloadTextFile(content, filename, mime = 'text/markdown;charset=utf-8') {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>const blob = new Blob([content], { type: mime });</p>
-<p class="p1"><span class="Apple-converted-space">      </span>const url = URL.createObjectURL(blob);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>const a = document.createElement('a');</p>
-<p class="p1"><span class="Apple-converted-space">      </span>a.href = url;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>a.download = filename;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>document.body.appendChild(a);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>a.click();</p>
-<p class="p1"><span class="Apple-converted-space">      </span>document.body.removeChild(a);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>URL.revokeObjectURL(url);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>function exportDetailAsMarkdown() {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>if (!currentDetailId) {</p>
-<p class="p1"><span class="Apple-converted-space">        </span>showToast('⚠️ 書き出す作品が選択されていません', 'warning');</p>
-<p class="p1"><span class="Apple-converted-space">        </span>return;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>}</p>
-<p class="p1"><span class="Apple-converted-space">      </span>const records = getArtworkRecords();</p>
-<p class="p1"><span class="Apple-converted-space">      </span>const rec = records.find(r =&gt; r.id === currentDetailId);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>if (!rec) {</p>
-<p class="p1"><span class="Apple-converted-space">        </span>showToast('⚠️ データが見つかりませんでした', 'warning');</p>
-<p class="p1"><span class="Apple-converted-space">        </span>return;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>}</p>
-<p class="p1"><span class="Apple-converted-space">      </span>const md = markdownForArtwork(rec);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>const safeTitle = (rec.title || 'untitled').replace(/[\\/:*?"&lt;&gt;|]/g, '_');</p>
-<p class="p1"><span class="Apple-converted-space">      </span>const dt = formatDateForMD(rec.timestamp).replace(/[: ]/g, '-');</p>
-<p class="p1"><span class="Apple-converted-space">      </span>const filename = `${dt}-${safeTitle}.md`;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>downloadTextFile(md, filename);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>showToast('✅ Markdownファイルを書き出しました');</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>function exportAllAsMarkdown() {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>const records = getArtworkRecords();</p>
-<p class="p1"><span class="Apple-converted-space">      </span>if (!records.length) {</p>
-<p class="p1"><span class="Apple-converted-space">        </span>showToast('⚠️ 書き出す鑑賞記録がありません', 'warning');</p>
-<p class="p1"><span class="Apple-converted-space">        </span>return;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>}</p>
-<p class="p1"><span class="Apple-converted-space">      </span>const parts = [];</p>
-<p class="p1"><span class="Apple-converted-space">      </span>records.sort((a, b) =&gt; (a.timestamp || 0) - (b.timestamp || 0));</p>
-<p class="p1"><span class="Apple-converted-space">      </span>records.forEach((rec, idx) =&gt; {</p>
-<p class="p1"><span class="Apple-converted-space">        </span>parts.push(markdownForArtwork(rec));</p>
-<p class="p1"><span class="Apple-converted-space">        </span>if (idx !== records.length - 1) parts.push('---');</p>
-<p class="p1"><span class="Apple-converted-space">      </span>});</p>
-<p class="p1"><span class="Apple-converted-space">      </span>const all = parts.join('\n');</p>
-<p class="p1"><span class="Apple-converted-space">      </span>const now = formatDateForMD(Date.now()).replace(/[: ]/g, '-');</p>
-<p class="p1"><span class="Apple-converted-space">      </span>const filename = `artwork-records-${now}.md`;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>downloadTextFile(all, filename);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>showToast('✅ 全件をMarkdownで書き出しました');</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>// Toast</p>
-<p class="p1"><span class="Apple-converted-space">    </span>function showToast(message, type = 'success') {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>const toast = document.getElementById('toast');</p>
-<p class="p1"><span class="Apple-converted-space">      </span>toast.textContent = message;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>toast.style.background = type === 'warning' ? '#e74c3c' : '#27ae60';</p>
-<p class="p1"><span class="Apple-converted-space">      </span>toast.classList.add('show');</p>
-<p class="p1"><span class="Apple-converted-space">      </span>setTimeout(() =&gt; toast.classList.remove('show'), 3000);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;/script&gt;</p>
-<p class="p1">&lt;/body&gt;</p>
-<p class="p2"><br></p>
-<p class="p1">&lt;/html&gt;</p>
+  <div class="container">
+    <header>
+      <div class="version-badge">v2.2 Time×Space</div>
+      <h1>🎨 美術鑑賞対話アシスタント</h1>
+      <p>Dissonance & Insight - Personal Edition</p>
+    </header>
+
+    <div class="top-nav">
+      <button class="btn-secondary" onclick="showSection('sectionList')">
+        トップ（一覧）に戻る
+      </button>
+    </div>
+
+    <div class="main-content">
+      <!-- 作品一覧 -->
+      <div class="section active" id="sectionList">
+        <div class="list-header">
+          <h2>📚 鑑賞記録一覧</h2>
+          <div style="display:flex; gap:8px; flex-wrap:wrap;">
+            <button class="btn-secondary" onclick="exportAllAsMarkdown()">💾 全件Markdown</button>
+            <button class="btn-primary" onclick="startNewArtwork()">＋ 新しい作品を鑑賞</button>
+          </div>
+        </div>
+        <div id="artworkListContainer"></div>
+      </div>
+
+      <!-- 作品基本情報 -->
+      <div class="section" id="section1">
+        <h2 style="margin-bottom: 25px;">📋 作品の基本情報</h2>
+
+        <div class="form-group">
+          <label>作品の写真 <span style="opacity: 0.7;">(推奨)</span></label>
+          <div class="photo-upload-area" onclick="document.getElementById('photoInput').click()">
+            <div id="uploadPrompt">
+              <div style="font-size: 3em; margin-bottom: 10px;">📷</div>
+              <p style="font-weight: 600;">クリックして写真を選択（カメラ起動可）</p>
+            </div>
+            <img id="photoPreview" class="photo-preview" style="display: none;">
+          </div>
+          <input type="file" id="photoInput" accept="image/*" capture="environment" style="display: none;"
+            onchange="handlePhotoUpload(event)">
+        </div>
+
+        <div class="form-group">
+          <label>作品名 *</label>
+          <input type="text" id="artworkTitle" placeholder="例: 睡蓮">
+        </div>
+        <div class="form-group">
+          <label>作家名 *</label>
+          <input type="text" id="artistName" placeholder="例: クロード・モネ">
+        </div>
+
+        <div style="display:flex; gap:10px; margin-top:20px; flex-wrap:wrap;">
+          <button class="btn-secondary" onclick="showSection('sectionList')">← 一覧に戻る</button>
+          <button class="btn-primary" onclick="goToStep(2)" style="flex:1;">
+            次へ：第一印象を記録 →
+          </button>
+        </div>
+      </div>
+
+      <!-- 第一印象 + 時間×空間軸 -->
+      <div class="section" id="section2">
+        <h2 style="margin-bottom: 25px;">👁️ あなたの第一印象</h2>
+
+        <div class="timer-box">
+          <div style="font-size: 1.2em; font-weight: 600;">⏰ 第一印象タイマー</div>
+          <div class="timer-display" id="timerDisplay">3:00</div>
+          <p style="font-size: 0.9em; opacity: 0.9;">理性が介入する前の「生の反応」を記録</p>
+          <div style="margin-top: 15px;">
+            <button class="timer-btn" onclick="startTimer()">スタート</button>
+            <button class="timer-btn" onclick="resetTimer()">リセット</button>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>一文での第一印象 *</label>
+          <textarea id="firstImpression" rows="3" placeholder="例: 輪郭がなくてぼんやりしているけど、なぜか心が落ち着く絵"></textarea>
+        </div>
+
+        <div class="form-group">
+          <label>時間的距離（過去 ← 現在 → 未来）</label>
+          <input type="range" id="axisTime" min="0" max="100" value="50" oninput="updateAxisLabels()">
+          <div id="axisTimeLabel" class="axis-hint">現在</div>
+          <div class="axis-hint">
+            ヒント例：制作当時の観客／今の自分／100年後の誰かとして見た時の違いをイメージする
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>物理的距離（接近 ← 標準 → 遠景）</label>
+          <input type="range" id="axisSpace" min="0" max="100" value="50" oninput="updateAxisLabels()">
+          <div id="axisSpaceLabel" class="axis-hint">標準（2m）</div>
+          <div class="axis-hint">
+            ヒント例：30cmまで近づいた時／2m離れた時／展示室の端から見た時の見え方の違いを思い出す
+          </div>
+        </div>
+
+        <div style="display:flex; gap:10px; margin-top:20px; flex-wrap:wrap;">
+          <button class="btn-secondary" onclick="goToStep(1)">← 前に戻る</button>
+          <button class="btn-primary" onclick="completeSession()" style="flex:1;">
+            記録を保存 ✓
+          </button>
+        </div>
+      </div>
+
+      <!-- 保存完了 -->
+      <div class="section" id="section3">
+        <h2 style="margin-bottom: 25px;">✅ 保存完了</h2>
+        <div style="background: #d1ecf1; padding: 30px; border-radius: 12px; text-align: center;">
+          <div style="font-size: 4em; margin-bottom: 15px;">💾</div>
+          <h3 style="color: var(--primary); margin-bottom: 15px;">データを保存しました</h3>
+          <p style="opacity: 0.8; line-height: 1.8;">
+            あなたの鑑賞記録はブラウザに保存されています。<br>
+            一覧画面から、いつでも見返すことができます。
+          </p>
+          <div style="display: flex; gap: 10px; justify-content: center; margin-top: 20px; flex-wrap:wrap;">
+            <button class="btn-primary" onclick="showSection('sectionList')">
+              一覧に戻る 📚
+            </button>
+            <button class="btn-secondary" onclick="startNewArtwork()">
+              続けて新しい作品を鑑賞 →
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 作品詳細 -->
+      <div class="section" id="sectionDetail">
+        <h2 style="margin-bottom: 25px;">🖼️ 鑑賞記録の詳細</h2>
+        <div id="detailContent"></div>
+        <div style="display: flex; gap: 10px; margin-top: 20px; flex-wrap:wrap;">
+          <button class="btn-secondary" onclick="showSection('sectionList')">一覧に戻る</button>
+          <button class="btn-secondary" onclick="exportDetailAsMarkdown()">Markdownで書き出す</button>
+          <button class="btn-primary" onclick="startNewArtwork()">新しい作品を鑑賞</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 復元通知 -->
+  <div class="restore-notification" id="restoreNotification">
+    <h3 style="margin-bottom: 15px;">💾 前回の途中データがあります</h3>
+    <p style="margin-bottom: 20px;">続きから始めますか？</p>
+    <div style="display: flex; gap: 10px;">
+      <button class="btn-primary" onclick="restoreData()">復元する</button>
+      <button class="btn-secondary" onclick="dismissRestore()">新規作成</button>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div class="toast" id="toast"></div>
+
+  <script>
+    // 進行中データ
+    let artworkData = {
+      id: null,
+      title: '', artist: '', firstImpression: '',
+      photoDataURL: '', timestamp: null,
+      axisTime: 50,
+      axisSpace: 50
+    };
+
+    let currentStep = 1;
+    let timerInterval = null;
+    let timerSeconds = 180;
+    let currentDetailId = null;
+
+    // ページ読み込み時
+    window.addEventListener('DOMContentLoaded', function () {
+      checkForSavedData();
+      renderArtworkList();
+      updateAxisLabels();
+    });
+
+    // localStorage ヘルパ
+    function getArtworkRecords() {
+      const raw = localStorage.getItem('artworkRecords');
+      if (!raw) return [];
+      try {
+        const parsed = JSON.parse(raw);
+        return Array.isArray(parsed) ? parsed : [];
+      } catch (e) {
+        console.error('Failed to parse artworkRecords', e);
+        return [];
+      }
+    }
+
+    function saveArtworkRecords(records) {
+      localStorage.setItem('artworkRecords', JSON.stringify(records));
+    }
+
+    // 一覧描画
+    function renderArtworkList() {
+      const container = document.getElementById('artworkListContainer');
+      const records = getArtworkRecords();
+
+      if (!records.length) {
+        container.innerHTML = `
+                <div class="empty-state">
+                    まだ鑑賞記録はありません。<br>
+                    「＋ 新しい作品を鑑賞」から、最初の1枚を記録してみましょう。
+                </div>
+            `;
+        return;
+      }
+
+      records.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+
+      const listEl = document.createElement('div');
+      listEl.className = 'artwork-list';
+
+      records.forEach(rec => {
+        const card = document.createElement('div');
+        card.className = 'artwork-card';
+        card.onclick = () => openDetail(rec.id);
+
+        let thumb;
+        if (rec.photoDataURL) {
+          thumb = document.createElement('img');
+          thumb.src = rec.photoDataURL;
+          thumb.className = 'card-thumb';
+        } else {
+          thumb = document.createElement('div');
+          thumb.className = 'card-thumb';
+        }
+
+        const meta = document.createElement('div');
+        meta.className = 'card-meta';
+
+        const title = document.createElement('div');
+        title.className = 'card-title';
+        title.textContent = rec.title || '（無題）';
+
+        const artist = document.createElement('div');
+        artist.className = 'card-artist';
+        artist.textContent = rec.artist || '作者不明';
+
+        const date = document.createElement('div');
+        date.className = 'card-date';
+        date.textContent = formatRelativeTime(rec.timestamp);
+
+        meta.appendChild(title);
+        meta.appendChild(artist);
+        meta.appendChild(date);
+
+        card.appendChild(thumb);
+        card.appendChild(meta);
+
+        listEl.appendChild(card);
+      });
+
+      container.innerHTML = '';
+      container.appendChild(listEl);
+    }
+
+    function formatRelativeTime(timestamp) {
+      if (!timestamp) return '';
+      const now = Date.now();
+      const diffMs = now - timestamp;
+      const diffSec = Math.floor(diffMs / 1000);
+      const diffMin = Math.floor(diffSec / 60);
+      const diffHr = Math.floor(diffMin / 60);
+      const diffDay = Math.floor(diffHr / 24);
+
+      if (diffSec < 60) return 'たった今';
+      if (diffMin < 60) return diffMin + '分前';
+      if (diffHr < 24) return diffHr + '時間前';
+      if (diffDay === 1) return '昨日';
+      if (diffDay < 7) return diffDay + '日前';
+
+      const d = new Date(timestamp);
+      const y = d.getFullYear();
+      const m = d.getMonth() + 1;
+      const day = d.getDate();
+      return `${y}/${m}/${day}`;
+    }
+
+    // 新規開始
+    function startNewArtwork() {
+      artworkData = {
+        id: null,
+        title: '', artist: '', firstImpression: '',
+        photoDataURL: '', timestamp: null,
+        axisTime: 50,
+        axisSpace: 50
+      };
+      localStorage.removeItem('artworkData_v2');
+
+      document.getElementById('artworkTitle').value = '';
+      document.getElementById('artistName').value = '';
+      document.getElementById('firstImpression').value = '';
+      document.getElementById('photoPreview').style.display = 'none';
+      document.getElementById('uploadPrompt').style.display = 'block';
+      document.getElementById('photoPreview').src = '';
+      document.getElementById('axisTime').value = 50;
+      document.getElementById('axisSpace').value = 50;
+      updateAxisLabels();
+      resetTimer();
+
+      showSection('section1');
+    }
+
+    // セクション表示
+    function showSection(id) {
+      document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // 途中保存確認
+    function checkForSavedData() {
+      const saved = localStorage.getItem('artworkData_v2');
+      if (saved) {
+        const data = JSON.parse(saved);
+        const hoursSince = (new Date().getTime() - data.timestamp) / (1000 * 60 * 60);
+        if (hoursSince < 24) {
+          document.getElementById('restoreNotification').classList.add('show');
+        } else {
+          localStorage.removeItem('artworkData_v2');
+        }
+      }
+    }
+
+    function restoreData() {
+      const saved = localStorage.getItem('artworkData_v2');
+      if (saved) {
+        artworkData = JSON.parse(saved);
+        document.getElementById('artworkTitle').value = artworkData.title || '';
+        document.getElementById('artistName').value = artworkData.artist || '';
+        document.getElementById('firstImpression').value = artworkData.firstImpression || '';
+        if (artworkData.photoDataURL) {
+          document.getElementById('photoPreview').src = artworkData.photoDataURL;
+          document.getElementById('photoPreview').style.display = 'block';
+          document.getElementById('uploadPrompt').style.display = 'none';
+        }
+        document.getElementById('axisTime').value = artworkData.axisTime ?? 50;
+        document.getElementById('axisSpace').value = artworkData.axisSpace ?? 50;
+        updateAxisLabels();
+        showToast('✅ 前回のデータを復元しました');
+        showSection('section1');
+      }
+      dismissRestore();
+    }
+
+    function dismissRestore() {
+      document.getElementById('restoreNotification').classList.remove('show');
+    }
+
+    function autoSave() {
+      artworkData.timestamp = new Date().getTime();
+      localStorage.setItem('artworkData_v2', JSON.stringify(artworkData));
+    }
+
+    // 写真アップロード
+    function handlePhotoUpload(event) {
+      const file = event.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function (e) {
+          artworkData.photoDataURL = e.target.result;
+          document.getElementById('photoPreview').src = e.target.result;
+          document.getElementById('photoPreview').style.display = 'block';
+          document.getElementById('uploadPrompt').style.display = 'none';
+          autoSave();
+          showToast('✅ 写真をアップロードしました');
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+
+    // タイマー
+    function startTimer() {
+      if (timerInterval) return;
+      timerInterval = setInterval(() => {
+        timerSeconds--;
+        updateTimerDisplay();
+        if (timerSeconds <= 0) {
+          clearInterval(timerInterval);
+          timerInterval = null;
+          showToast('⏰ 3分経過しました！', 'warning');
+        }
+      }, 1000);
+    }
+
+    function resetTimer() {
+      clearInterval(timerInterval);
+      timerInterval = null;
+      timerSeconds = 180;
+      updateTimerDisplay();
+    }
+
+    function updateTimerDisplay() {
+      const min = Math.floor(timerSeconds / 60);
+      const sec = timerSeconds % 60;
+      document.getElementById('timerDisplay').textContent =
+        `${min}:${sec.toString().padStart(2, '0')}`;
+    }
+
+    // 時間×空間軸ラベル
+    function labelTimeDistance(v) {
+      if (v <= 10) return '過去（制作当時）寄り';
+      if (v >= 90) return '未来（100年後）寄り';
+      if (v < 40) return 'やや過去寄り';
+      if (v > 60) return 'やや未来寄り';
+      return '現在';
+    }
+    function labelPhysicalDistance(v) {
+      if (v <= 10) return '接近（30cm）に近い';
+      if (v >= 90) return '遠景（50m）に近い';
+      if (v < 40) return '標準より近い';
+      if (v > 60) return '標準より遠い';
+      return '標準（2m）';
+    }
+
+    function updateAxisLabels() {
+      const t = parseInt(document.getElementById('axisTime').value, 10);
+      const s = parseInt(document.getElementById('axisSpace').value, 10);
+      document.getElementById('axisTimeLabel').textContent = labelTimeDistance(t);
+      document.getElementById('axisSpaceLabel').textContent = labelPhysicalDistance(s);
+    }
+
+    // ステップ移動
+    function goToStep(step) {
+      if (step === 2) {
+        const title = document.getElementById('artworkTitle').value.trim();
+        const artist = document.getElementById('artistName').value.trim();
+        if (!title || !artist) {
+          showToast('⚠️ 作品名と作家名を入力してください', 'warning');
+          return;
+        }
+        artworkData.title = title;
+        artworkData.artist = artist;
+        autoSave();
+      }
+
+      document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+      document.getElementById('section' + step).classList.add('active');
+      currentStep = step;
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // セッション完了 → 多作品配列へ保存
+    function completeSession() {
+      const impression = document.getElementById('firstImpression').value.trim();
+      if (!impression) {
+        showToast('⚠️ 第一印象を入力してください', 'warning');
+        return;
+      }
+      artworkData.firstImpression = impression;
+      artworkData.timestamp = new Date().getTime();
+      artworkData.axisTime = parseInt(document.getElementById('axisTime').value, 10);
+      artworkData.axisSpace = parseInt(document.getElementById('axisSpace').value, 10);
+
+      if (!artworkData.id) {
+        artworkData.id = 'art_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+      }
+
+      const records = getArtworkRecords();
+      records.push(artworkData);
+      saveArtworkRecords(records);
+
+      localStorage.removeItem('artworkData_v2');
+      renderArtworkList();
+      showSection('section3');
+      showToast('✅ 鑑賞記録を保存しました！');
+    }
+
+    // 詳細表示
+    function openDetail(id) {
+      const records = getArtworkRecords();
+      const rec = records.find(r => r.id === id);
+      if (!rec) {
+        showToast('⚠️ データが見つかりませんでした', 'warning');
+        return;
+      }
+      currentDetailId = id;
+
+      const container = document.getElementById('detailContent');
+      container.innerHTML = '';
+
+      if (rec.photoDataURL) {
+        const img = document.createElement('img');
+        img.src = rec.photoDataURL;
+        img.className = 'detail-photo';
+        container.appendChild(img);
+      }
+
+      const infoBlock = document.createElement('div');
+      infoBlock.className = 'detail-block';
+      infoBlock.innerHTML = `
+            <div class="detail-title-artist">
+                ${rec.title || '（無題）'}<br>
+                <span style="font-size:0.9em; opacity:0.8;">${rec.artist || '作者不明'}</span>
+            </div>
+        `;
+      container.appendChild(infoBlock);
+
+      const dateBlock = document.createElement('div');
+      dateBlock.className = 'detail-block';
+      const dt = new Date(rec.timestamp || Date.now());
+      const dtText = `${dt.getFullYear()}年${dt.getMonth() + 1}月${dt.getDate()}日 `
+        + `${dt.getHours().toString().padStart(2, '0')}:${dt.getMinutes().toString().padStart(2, '0')}`;
+      dateBlock.innerHTML = `
+            <div class="detail-label">鑑賞日時</div>
+            <div class="detail-text">${dtText}</div>
+        `;
+      container.appendChild(dateBlock);
+
+      const impressionBlock = document.createElement('div');
+      impressionBlock.className = 'detail-block';
+      impressionBlock.innerHTML = `
+            <div class="detail-label">第一印象</div>
+            <div class="detail-text">${(rec.firstImpression || '').replace(/\n/g, '<br>') || '（未入力）'}</div>
+        `;
+      container.appendChild(impressionBlock);
+
+      const axisBlock = document.createElement('div');
+      axisBlock.className = 'detail-block';
+      const tLabel = labelTimeDistance(rec.axisTime ?? 50);
+      const sLabel = labelPhysicalDistance(rec.axisSpace ?? 50);
+      axisBlock.innerHTML = `
+            <div class="detail-label">時間 × 空間の感覚</div>
+            <div class="detail-text">
+                時間的距離：${tLabel}<br>
+                物理的距離：${sLabel}
+            </div>
+        `;
+      container.appendChild(axisBlock);
+
+      showSection('sectionDetail');
+    }
+
+    // Markdown書き出し用
+    function formatDateForMD(timestamp) {
+      const d = new Date(timestamp || Date.now());
+      const y = d.getFullYear();
+      const m = (d.getMonth() + 1).toString().padStart(2, '0');
+      const day = d.getDate().toString().padStart(2, '0');
+      const hh = d.getHours().toString().padStart(2, '0');
+      const mm = d.getMinutes().toString().padStart(2, '0');
+      return `${y}-${m}-${day} ${hh}:${mm}`;
+    }
+
+    function markdownForArtwork(rec) {
+      const title = rec.title || '（無題）';
+      const artist = rec.artist || '作者不明';
+      const dt = formatDateForMD(rec.timestamp);
+      const tLabel = labelTimeDistance(rec.axisTime ?? 50);
+      const sLabel = labelPhysicalDistance(rec.axisSpace ?? 50);
+      const impression = rec.firstImpression || '';
+
+      return [
+        `# ${title} – ${artist}`,
+        '',
+        `- 鑑賞日時: ${dt}`,
+        `- 時間的距離: ${tLabel}`,
+        `- 物理的距離: ${sLabel}`,
+        '',
+        '## 第一印象',
+        impression,
+        '',
+        '## 時間 × 空間の感覚',
+        `- 時間的距離: ${tLabel}`,
+        `- 物理的距離: ${sLabel}`,
+        ''
+      ].join('\n');
+    }
+
+    function downloadTextFile(content, filename, mime = 'text/markdown;charset=utf-8') {
+      const blob = new Blob([content], { type: mime });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
+
+    function exportDetailAsMarkdown() {
+      if (!currentDetailId) {
+        showToast('⚠️ 書き出す作品が選択されていません', 'warning');
+        return;
+      }
+      const records = getArtworkRecords();
+      const rec = records.find(r => r.id === currentDetailId);
+      if (!rec) {
+        showToast('⚠️ データが見つかりませんでした', 'warning');
+        return;
+      }
+      const md = markdownForArtwork(rec);
+      const safeTitle = (rec.title || 'untitled').replace(/[\\/:*?"<>|]/g, '_');
+      const dt = formatDateForMD(rec.timestamp).replace(/[: ]/g, '-');
+      const filename = `${dt}-${safeTitle}.md`;
+      downloadTextFile(md, filename);
+      showToast('✅ Markdownファイルを書き出しました');
+    }
+
+    function exportAllAsMarkdown() {
+      const records = getArtworkRecords();
+      if (!records.length) {
+        showToast('⚠️ 書き出す鑑賞記録がありません', 'warning');
+        return;
+      }
+      const parts = [];
+      records.sort((a, b) => (a.timestamp || 0) - (b.timestamp || 0));
+      records.forEach((rec, idx) => {
+        parts.push(markdownForArtwork(rec));
+        if (idx !== records.length - 1) parts.push('---');
+      });
+      const all = parts.join('\n');
+      const now = formatDateForMD(Date.now()).replace(/[: ]/g, '-');
+      const filename = `artwork-records-${now}.md`;
+      downloadTextFile(all, filename);
+      showToast('✅ 全件をMarkdownで書き出しました');
+    }
+
+    // Toast
+    function showToast(message, type = 'success') {
+      const toast = document.getElementById('toast');
+      toast.textContent = message;
+      toast.style.background = type === 'warning' ? '#e74c3c' : '#27ae60';
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 3000);
+    }
+  </script>
 </body>
+
 </html>
